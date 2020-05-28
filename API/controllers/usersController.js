@@ -2,13 +2,45 @@ const Users = require('../models/Users');
 const bcrypt = require('bcrypt');
 
 exports.LoginUser = async (req, res) => {
-    
+    Users.findOne({ where: { email: req.body.email } })
+        .then(user => {
+            if(user.length < 1) {
+                return res.status(401).json({
+                    message: 'Auth failed.'
+                })
+            }
+
+            bcrypt.compare(req.body.password, user.password, (err, result) => {
+                if(err) {
+                    return res.status(401).json({
+                        message: 'Auth failed.'
+                    });
+                }
+
+                if(result) {
+                    res.status(200).json({
+                        message: 'Auth successful.'
+                    });
+                }
+
+                res.status(401).json({
+                    message: 'Auth failed.'
+                });
+            })
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(500).json({
+                error
+            });
+        });
 }
 
-exports.CreateUser = async (req, res) => {
-    Users.find({where: {email: req.body.email}})
+exports.CreateUser = (req, res, next) => {
+    console.log(req.body);
+    Users.findOne({ where: { email: req.body.email } })
         .then(user => {
-            if(user.length >= 1) {
+            if(user != null) {
                 return res.status(409).json({
                     message: 'Mail exists'
                 });
