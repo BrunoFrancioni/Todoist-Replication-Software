@@ -45,11 +45,4 @@ app.use('/projects', projectRoutes());
 app.use('/tags', tagsRoutes());
 app.use('/tasksTagged', tasksTaggedRoutes());
 
-
-// Server
-const host = process.env.HOST || '0.0.0.0';
-const port = process.env.PORT || 3000;
-
-app.listen(port, host, () => {
-    console.log('El servidor está funcionando');
-});
+module.exports = app;
