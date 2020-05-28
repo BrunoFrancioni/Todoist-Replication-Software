@@ -6,7 +6,12 @@ const Users = require('./Users');
 const Projects = require('./Projects');
 
 const Tasks = db.define('tasks', {
-    idUser: {
+    idtask: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    iduser: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -15,7 +20,7 @@ const Tasks = db.define('tasks', {
             deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
         }
     },
-    idProject: {
+    idproject: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {

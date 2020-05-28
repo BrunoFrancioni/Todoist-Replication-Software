@@ -5,7 +5,12 @@ const db = require('../config/database');
 const Users = require('./Users');
 
 const Tags = db.define('tags', {
-    idUser: {
+    idtag: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    iduser: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -14,7 +19,7 @@ const Tags = db.define('tags', {
             deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
         }
     },
-    tagName: {
+    tagname: {
         type: Sequelize.STRING(50),
         allowNull: false
     }

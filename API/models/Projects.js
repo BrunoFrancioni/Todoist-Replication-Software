@@ -5,7 +5,12 @@ const db = require('../config/database');
 const Users = require('./Users');
 
 const Projects = db.define('projects', {
-    idUser: {
+    idproject: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    iduser: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {

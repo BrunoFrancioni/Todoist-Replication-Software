@@ -6,7 +6,12 @@ const Tasks = require('./Tasks');
 const Tags = require('./Tags');
 
 const TasksTagged = db.define('tasksTagged', {
-    idTask: {
+    idtasktagged: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    idtask: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -15,7 +20,7 @@ const TasksTagged = db.define('tasksTagged', {
             deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
         }
     },
-    idTag: {
+    idtag: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
