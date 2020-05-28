@@ -1,10 +1,11 @@
 const Users = require('../models/Users');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-exports.LoginUser = async (req, res) => {
+exports.LoginUser = (req, res) => {
     Users.findOne({ where: { email: req.body.email } })
         .then(user => {
-            if(user.length < 1) {
+            if(user === null) {
                 return res.status(401).json({
                     message: 'Auth failed.'
                 })
@@ -18,8 +19,18 @@ exports.LoginUser = async (req, res) => {
                 }
 
                 if(result) {
-                    res.status(200).json({
-                        message: 'Auth successful.'
+                    const token = jwt.sign({
+                        email: user.email,
+                        iduser: user.iduser,
+                        name: user.name,
+                        lastname: user.lastname
+                    }, process.env.JWT_KEY, {
+                        expiresIn: "1h"
+                    });
+
+                    return res.status(200).json({
+                        message: 'Auth successful.',
+                        token
                     });
                 }
 
@@ -40,7 +51,7 @@ exports.CreateUser = (req, res) => {
     console.log(req.body);
     Users.findOne({ where: { email: req.body.email } })
         .then(user => {
-            if(user != null) {
+            if(user !== null) {
                 return res.status(409).json({
                     message: 'Mail exists'
                 });
