@@ -36,7 +36,7 @@ exports.LoginUser = async (req, res) => {
         });
 }
 
-exports.CreateUser = (req, res, next) => {
+exports.CreateUser = (req, res) => {
     console.log(req.body);
     Users.findOne({ where: { email: req.body.email } })
         .then(user => {
@@ -81,8 +81,9 @@ exports.CreateUser = (req, res, next) => {
         });
 }
 
-exports.DeleteUser = async (req, res) => {
-    Users.destroy({ where: { idUser: req.params.idUser }})
+exports.DeleteUser = (req, res) => {
+    console.log(req.params);
+    Users.destroy({ where: { iduser: req.params.iduser }})
         .then(result => {
             res.status(200).json({
                 message: 'User deleted'

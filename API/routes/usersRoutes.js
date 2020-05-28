@@ -8,7 +8,7 @@ module.exports = () => {
 
     router.post('/signup', usersController.CreateUser);
 
-    router.delete('/:idUser', usersController.DeleteUser);
+    router.delete('/:iduser', usersController.DeleteUser);
 
     return router;
 }
