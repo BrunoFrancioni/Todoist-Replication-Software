@@ -15,7 +15,7 @@ const Tags = db.define('tags', {
         allowNull: false,
         references: {
             model: Users,
-            key: 'idUser',
+            key: 'iduser',
             deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
         }
     },

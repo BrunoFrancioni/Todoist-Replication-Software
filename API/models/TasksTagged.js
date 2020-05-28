@@ -16,7 +16,7 @@ const TasksTagged = db.define('tasksTagged', {
         allowNull: false,
         references: {
             model: Tasks,
-            key: 'idTask',
+            key: 'idtask',
             deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
         }
     },
@@ -25,7 +25,7 @@ const TasksTagged = db.define('tasksTagged', {
         allowNull: false,
         references: {
             model: Tags,
-            key: 'idTag',
+            key: 'idtag',
             deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
         }
     }
