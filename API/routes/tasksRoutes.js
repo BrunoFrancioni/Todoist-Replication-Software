@@ -4,17 +4,13 @@ const router = express.Router();
 const tasksController = require('../controllers/tasksController');
 
 module.exports = () => {
-    router.get('/', (req, res) => {
-        res.status(200).json({
-            "Estado": "Funcionando"
-        });
-    });
+    router.post('/', tasksController.createTask);
 
-    router.post('/', (req, res) => {
-        res.status(200).json({
-            "Estado": "Funcionando"
-        });
-    });
+    router.get('/:iduser', tasksController.getTasksOfUser);
+
+    router.get('/:idproject', tasksController.getTasksOfProject);
+
+    router.delete('/:idtask', tasksController.DeleteTask);
 
     return router;
 }
