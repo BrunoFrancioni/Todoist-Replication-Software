@@ -143,7 +143,7 @@ exports.DeleteTask = (req, res) => {
 exports.UpdateTask = (req, res) => {
     const { idproject, title, content, done, day, time, deleted} = req.body;
 
-    const toUpdate = {};
+    let toUpdate = {};
 
     if(idproject !== undefined) toUpdate.idproject = idproject;
 
