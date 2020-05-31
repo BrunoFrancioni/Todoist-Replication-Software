@@ -2,7 +2,7 @@ const Users = require('../models/Users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-exports.LoginUser = (req, res) => {
+exports.LoginUser = async (req, res) => {
     const { email, password } = req.body;
 
     if(!email || !password) {
@@ -11,51 +11,53 @@ exports.LoginUser = (req, res) => {
         });
     }
 
-    Users.findOne({ where: { email: email } })
-        .then(user => {
-            if(user === null) {
+    try {
+        const user = await Users.findOne({ where: { email: email } });
+
+        if(user === null) {
+            return res.status(401).json({
+                message: 'Auth failed.'
+            })
+        }
+
+        bcrypt.compare(password, user.password, (err, result) => {
+            if(err) {
                 return res.status(401).json({
                     message: 'Auth failed.'
-                })
+                });
             }
 
-            bcrypt.compare(password, user.password, (err, result) => {
-                if(err) {
-                    return res.status(401).json({
-                        message: 'Auth failed.'
-                    });
-                }
-
-                if(result) {
-                    const token = jwt.sign({
-                        email: user.email,
-                        iduser: user.iduser,
-                        name: user.name,
-                        lastname: user.lastname
-                    }, process.env.JWT_KEY, {
-                        expiresIn: "1h"
-                    });
-
-                    return res.status(200).json({
-                        message: 'Auth successful.',
-                        token
-                    });
-                }
-
-                res.status(401).json({
-                    message: 'Auth failed.'
+            if(result) {
+                const token = jwt.sign({
+                    email: user.email,
+                    iduser: user.iduser,
+                    name: user.name,
+                    lastname: user.lastname
+                }, process.env.JWT_KEY, {
+                    expiresIn: "1h"
                 });
-            })
-        })
-        .catch(error => {
-            console.log(error);
-            res.status(500).json({
-                error
+
+                return res.status(200).json({
+                    message: 'Auth successful.',
+                    token
+                });
+            }
+
+            res.status(401).json({
+                message: 'Auth failed.'
             });
         });
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            error
+        });
+    }
+
+    
 }
 
-exports.CreateUser = (req, res) => {
+exports.CreateUser = async (req, res) => {
     const { name, lastname, email, password } = req.body;
 
     if(!name || !lastname || !email || !password) {
@@ -64,47 +66,52 @@ exports.CreateUser = (req, res) => {
         });;
     }
 
-    Users.findOne({ where: { email: email } })
-        .then(user => {
-            if(user !== null) {
-                return res.status(409).json({
-                    message: 'Mail exists'
-                });
-            } else {
-                bcrypt.hash(password, 10, (err, hash) => {
-                    if (err) {
-                        return res.status(500).json({
-                            err
-                        });
-                    } else {
-                        Users.create({
-                            name: name.toUpperCase(),
-                            lastname: lastname.toUpperCase(),
-                            password: hash,
-                            email: email
-                        })
-                            .then(result => {
-                                console.log(result);
-                                res.status(201).json({
-                                    message: 'User created.'
-                                });
-                            })
-                            .catch(error => {
-                                console.log(error);
-                                res.status(500).json({
-                                    error
-                                });
-                            });
-                    }
-                });
-            }
-        })
-        .catch(error => {
-            console.log(error);
-            return res.status(500).json({
-                error
+    try {
+        const user = await Users.findOne({ where: { email: email } });
+
+        if(user !== null) {
+            return res.status(409).json({
+                message: 'User exists'
             });
+        }
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            error
         });
+    }
+
+    let passwordHashed;
+
+    bcrypt.hash(password, 10, (err, hash) => {
+        if (err) {
+            return res.status(500).json({
+                err
+            });
+        } else {
+            passwordHashed = hash;
+        }
+    });
+
+    try {
+        const result = await Users.create({
+            name: name.toUpperCase(),
+            lastname: lastname.toUpperCase(),
+            password: passwordHashed,
+            email: email
+        });
+
+        console.log(result);
+
+        res.status(201).json({
+            message: 'User created.'
+        })
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            error
+        });
+    }
 }
 
 exports.UpdateUser = (req, res) => {
@@ -186,24 +193,23 @@ exports.UpdateUser = (req, res) => {
     }
 }
 
-exports.DeleteUser = (req, res) => {
-    console.log(req.params);
-    Users.destroy({ where: { iduser: req.params.iduser }})
-        .then(result => {
-            if(result === 0) {
-                return res.status(400).json({
-                    message: 'User ID not found.'
-                });
-            }
+exports.DeleteUser = async (req, res) => {
+    try {
+        const result = await Users.destroy({ where: { iduser: req.params.iduser }});
 
-            res.status(200).json({
-                message: 'User deleted'
+        if(result === 0) {
+            return res.status(400).json({
+                message: 'User ID not found.'
             });
-        })
-        .catch(error => {
-            console.log(error);
-            return res.status(500).json({
-                error
-            });
-        })
+        }
+
+        res.status(200).json({
+            message: 'User deleted.'
+        });
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({
+            error
+        });
+    }
 }
