@@ -81,95 +81,93 @@ exports.CreateUser = async (req, res) => {
         });
     }
 
-    let passwordHashed;
-
-    bcrypt.hash(password, 10, (err, hash) => {
+    bcrypt.hash(password, 10, async (err, hash) => {
         if (err) {
             return res.status(500).json({
                 err
             });
         } else {
-            passwordHashed = hash;
+            try {
+                const result = await Users.create({
+                    name: name.toUpperCase(),
+                    lastname: lastname.toUpperCase(),
+                    password: hash,
+                    email: email
+                });
+        
+                console.log(result);
+        
+                res.status(201).json({
+                    message: 'User created.'
+                })
+            } catch(error) {
+                console.log(error);
+                return res.status(500).json({
+                    error
+                });
+            }
         }
     });
+}
 
+exports.UpdateUser = async (req, res) => {
     try {
-        const result = await Users.create({
-            name: name.toUpperCase(),
-            lastname: lastname.toUpperCase(),
-            password: passwordHashed,
-            email: email
-        });
+        const user = Users.findByPk(req.params.iduser);
 
-        console.log(result);
+        if(user === null) {
+            return res.status(400).json({
+                message: 'Bad user ID.'
+            });
+        }
 
-        res.status(201).json({
-            message: 'User created.'
-        })
+        if(oldPassword) {
+            bcrypt.compare(oldPassword, user.password, (err, result) => {
+                if(err) {
+                    return res.status(401).json({
+                        message: 'Wrong old password.'
+                    });
+                }
+    
+                if(result) {
+                    console.log(result);
+                }
+            });
+        }
     } catch(error) {
         console.log(error);
         return res.status(500).json({
             error
         });
     }
-}
 
-exports.UpdateUser = (req, res) => {
-    const { name, lastname, password, email, oldPassword } = req.body;
+    const { name, lastname, newPassword, email, oldPassword } = req.body;
 
     let toUpdate = {};
 
-    if(name) toUpdate.name = name;
-    if(lastname) toUpdate.lastname = lastname;
+    if(name) toUpdate.name = name.toUpperCase();
+    if(lastname) toUpdate.lastname = lastname.toUpperCase();
     if(email) toUpdate.email = email;
 
-    if(password) {
-        if(!oldPassword) {
-            return res.status(400).json({
-                message: 'Old password required.'
-            });
-        } else {
-            Users.findByPk(req.params.iduser)
-            .then(user => {
-                if(user === null) {
-                    return res.status(400).json({
-                        message: 'Bad user ID.'
-                    });
-                }
-
-                bcrypt.compare(oldPassword, user.password, (err, result) => {
-                    if(err) {
-                        return res.status(401).json({
-                            message: 'Wrong old password.'
-                        });
-                    }
-    
-                    if(result) {
-                        console.log(result);
-                    }
-                });
-            })
-            .catch(error => {
-                console.log(error);
-                return res.status(500).json({
-                    error
-                });
-            });
-        }
+    if((newPassword && !oldPassword) || (!newPassword && oldPassword)) {
+        return res.status(400).json({
+            message: 'New password and old password are required.'
+        });
     }
 
-    bcrypt.hash(password, 10, (err, hash) => {
-        if(err) {
-            return status(500).json({
-                err
-            });
-        }
-
-        if(hash) {
-            console.log(hash);
-            toUpdate.password = hash;
-        }
-    });
+    if(password) {
+        bcrypt.hash(password, 10, (err, hash) => {
+            if(err) {
+                return status(500).json({
+                    err
+                });
+            }
+    
+            if(hash) {
+                console.log(hash);
+                toUpdate.password = hash;
+            }
+        });
+    }
 
     console.log(toUpdate);
 
@@ -177,19 +175,20 @@ exports.UpdateUser = (req, res) => {
         return res.status(400).json({
             message: 'Nothing to change.'
         });
-    } else {
-        Users.update(toUpdate, { where: { iduser: req.params.iduser } })
-            .then(result => {
-                console.log(result);
-                return res.status(200).json({
-                    message: 'User updated.'
-                });
-            })
-            .catch(error => {
-                return res.status(500).json({
-                    error
-                });
-            });
+    }
+
+    try {
+        const result = await Users.update(toUpdate, { where: { iduser: req.params.iduser } });
+
+        console.log(result);
+        return res.status(200).json({
+            message: 'User updated.'
+        });
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            error
+        });
     }
 }
 
