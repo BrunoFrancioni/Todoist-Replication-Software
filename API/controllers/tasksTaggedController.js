@@ -86,7 +86,7 @@ exports.DeleteTaskTaggedFromTag = (idtag) => {
         });
 }
 
-exports.GetAllTagsOfATask = async (idtask) => {
+exports.DeleteAllTagsOfATask = async (idtask) => {
     try {
         const result = await TasksTagged.destroy({ where: { idtask: idtask } });
 

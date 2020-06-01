@@ -2,6 +2,8 @@ const Tasks = require('../models/Tasks');
 const Users = require('../models/Users');
 const Projects = require('../models/Projects');
 
+const tasksTaggedController = require('../controllers/tasksTaggedController');
+
 exports.createTask = (req, res) => {
     Users.findByPk(req.body.iduser)
         .then(user => {
@@ -183,5 +185,26 @@ exports.UpdateTask = (req, res) => {
                     error
                 });
             });
+    }
+}
+
+exports.DeleteTasksOfAProject = async (idproject) => {
+    try {
+        const tasks = await Tasks.findAll({ where: { idproject = idproject } });
+
+        if(tasks === null) {
+            return true;
+        }
+
+        tasks.forEach(task => {
+            if(tasksTaggedController.DeleteAllTagsOfATask(task.idtask) === false ) {
+                return false;
+            }
+        });
+
+        return true;
+    } catch(error) {
+        console.log(error);
+        return false;
     }
 }
