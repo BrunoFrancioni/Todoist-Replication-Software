@@ -8,6 +8,8 @@ module.exports = () => {
 
     router.post('/signup', usersController.CreateUser);
 
+    router.put('/:iduser', usersController.UpdateUser);
+
     router.delete('/:iduser', usersController.DeleteUser);
 
     return router;
