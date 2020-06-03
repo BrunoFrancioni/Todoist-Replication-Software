@@ -8,7 +8,7 @@ module.exports = () => {
 
     router.get('/:iduser', projectsController.GetProjectsOfAUser);
 
-    router.get('?idproject=', projectsController.GetProjectTasks);
+    router.get('', projectsController.GetArchivedProjectsOfAUser);
 
     router.put('/:idproject', projectsController.EditProject);
 

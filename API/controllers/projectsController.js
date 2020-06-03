@@ -50,10 +50,25 @@ exports.CreateProject = async (req, res) => {
 
 exports.GetProjectsOfAUser = async (req, res) => {
     try {
-        const archivedProjects = await Projects.findAll({ where: { archived: false } });
+        const user = await Users.findByPk(req.params.iduser);
+
+        if(user === null) {
+            return res.status(400).json({
+                message: 'User ID not found.'
+            });
+        }
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            error
+        });
+    }
+
+    try {
+        const projects = await Projects.findAll({ where: { archived: false } });
 
         res.status(200).json({
-            archivedProjects
+            projects
         });
     } catch(error) {
         console.log(error);
@@ -65,47 +80,10 @@ exports.GetProjectsOfAUser = async (req, res) => {
 
 exports.GetArchivedProjectsOfAUser = async (req, res) => {
     try {
-        const archivedProjects = await Projects.findAll({ where: { archived: true } });
+        const archivedProjects = await Projects.findAll({ where: { iduser: req.query.iduser, archived: true } });
 
         res.status(200).json({
             archivedProjects
-        });
-    } catch(error) {
-        console.log(error);
-        res.status(500).json({
-            error
-        });
-    }
-}
-
-exports.GetProjectTasks = async (req, res) => {
-    try {
-        const project = await Projects.findByPk(req.query.idproject);
-
-        if(project === null) {
-            return res.status(400).josn({
-                message: 'Project ID invalid.'
-            });
-        }
-    } catch(error) {
-        console.log(error);
-        return res.status(500).json({
-            error
-        });
-    }
-
-    try {
-        const tasks = await Tasks.findAll({
-            where: {
-                deleted: false
-            },
-            include: [{
-                model: TasksTagged
-            }]
-        });
-
-        res.status(200).json({
-            tasks
         });
     } catch(error) {
         console.log(error);
@@ -129,7 +107,7 @@ exports.EditProject = async (req, res) => {
 
         if(project === null) {
             return res.status(400).json({
-                message: 'roject ID not found.'
+                message: 'Project ID not found.'
             });
         }
     } catch(error) {
