@@ -28,7 +28,7 @@ exports.CreateTag = async (req, res) => {
     }
 
     try {
-        const result = Tags.create({
+        const result = await Tags.create({
             iduser: iduser,
             tagname: tagname
         });
@@ -36,6 +36,36 @@ exports.CreateTag = async (req, res) => {
         console.log(result);
         res.status(200).json({
             message: 'Tag created.'
+        });
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            error
+        });
+    }
+}
+
+exports.GetTagsOfAUser = async (req, res) => {
+    try {
+        const user = await Users.findByPk(req.params.iduser);
+
+        if(user === null) {
+            return res.status(400).json({
+                message: 'User ID not found.'
+            });
+        }
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            error
+        });
+    }
+
+    try {
+        const tags = await Tags.findAll({ where: { iduser: req.params.iduser } });
+
+        return res.status(200).json({
+            tags
         });
     } catch(error) {
         console.log(error);
@@ -53,7 +83,7 @@ exports.DeleteTag = async (req, res) => {
     }
 
     try {
-        const result = await Tags.destroy({ where: { idtag: res.params.idtag } });
+        const result = await Tags.destroy({ where: { idtag: req.params.idtag } });
 
         if(result === 0) {
             return res.status(400).json({
