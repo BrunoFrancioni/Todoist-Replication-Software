@@ -8,7 +8,7 @@ module.exports = () => {
 
     router.get('/:iduser', tasksController.getTasksOfUser);
 
-    router.get('/:idproject', tasksController.getTasksOfProject);
+    router.get('?idproject=', tasksController.getTasksOfProject);
 
     router.delete('/:idtask', tasksController.DeleteTask);
 
