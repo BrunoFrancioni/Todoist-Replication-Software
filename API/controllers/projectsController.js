@@ -1,5 +1,6 @@
 const Projects = require('../models/Projects');
 const Users = require('../models/Users');
+const Tasks = require('../models/Tasks');
 
 const tasksController = require('../controllers/tasksController');
 
@@ -48,7 +49,70 @@ exports.CreateProject = async (req, res) => {
 }
 
 exports.GetProjectsOfAUser = async (req, res) => {
-    
+    try {
+        const archivedProjects = await Projects.findAll({ where: { archived: false } });
+
+        res.status(200).json({
+            archivedProjects
+        });
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({
+            error
+        });
+    }
+}
+
+exports.GetArchivedProjectsOfAUser = async (req, res) => {
+    try {
+        const archivedProjects = await Projects.findAll({ where: { archived: true } });
+
+        res.status(200).json({
+            archivedProjects
+        });
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({
+            error
+        });
+    }
+}
+
+exports.GetProjectTasks = async (req, res) => {
+    try {
+        const project = await Projects.findByPk(req.query.idproject);
+
+        if(project === null) {
+            return res.status(400).josn({
+                message: 'Project ID invalid.'
+            });
+        }
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            error
+        });
+    }
+
+    try {
+        const tasks = await Tasks.findAll({
+            where: {
+                deleted: false
+            },
+            include: [{
+                model: TasksTagged
+            }]
+        });
+
+        res.status(200).json({
+            tasks
+        });
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({
+            error
+        });
+    }
 }
 
 exports.EditProject = async (req, res) => {
@@ -65,7 +129,7 @@ exports.EditProject = async (req, res) => {
 
         if(project === null) {
             return res.status(400).json({
-                message: 'Porject ID not found.'
+                message: 'roject ID not found.'
             });
         }
     } catch(error) {
