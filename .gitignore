@@ -109,3 +109,4 @@ Database
 API/node_modules
 .idea
 API/variables.env
+API/config

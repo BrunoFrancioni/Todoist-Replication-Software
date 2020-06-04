@@ -7,10 +7,10 @@ const projectRoutes = require('./routes/projectsRoutes');
 const tagsRoutes = require('./routes/tagsRoutes');
 const tasksTaggedRoutes = require('./routes/tasksTaggedRoutes');
 
-const db = require('./config/database');
+const db = require('./models/index');
 
 // DB Authentication
-db.authenticate()
+db.sequelize.authenticate()
     .then(() => console.log('DB Connected'))
     .catch(error => console.log(error));
 
