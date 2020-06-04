@@ -1,6 +1,4 @@
-const Projects = require('../models/Projects');
-const Users = require('../models/Users');
-const Tasks = require('../models/Tasks');
+const models = require('../models/index');
 
 const tasksController = require('../controllers/tasksController');
 
@@ -14,7 +12,7 @@ exports.CreateProject = async (req, res) => {
     }
 
     try {
-        const user = await Users.findByPk(iduser);
+        const user = await models.Users.findByPk(iduser);
 
         if(user === null) {
             return res.status(400).json({
@@ -29,7 +27,7 @@ exports.CreateProject = async (req, res) => {
     }
 
     try {
-        const result = await Projects.create({
+        const result = await models.Projects.create({
             iduser: iduser,
             title: title,
             archived: false
@@ -50,7 +48,7 @@ exports.CreateProject = async (req, res) => {
 
 exports.GetProjectsOfAUser = async (req, res) => {
     try {
-        const user = await Users.findByPk(req.params.iduser);
+        const user = await models.Users.findByPk(req.params.iduser);
 
         if(user === null) {
             return res.status(400).json({
@@ -65,25 +63,15 @@ exports.GetProjectsOfAUser = async (req, res) => {
     }
 
     try {
-        const projects = await Projects.findAll({ where: { archived: false } });
+        const projects = await models.Projects.findAll({
+            where: {
+                iduser: req.params.iduser,
+                archived: (req.query.archived) ? req.query.archived : false
+            }
+        });
 
         res.status(200).json({
             projects
-        });
-    } catch(error) {
-        console.log(error);
-        res.status(500).json({
-            error
-        });
-    }
-}
-
-exports.GetArchivedProjectsOfAUser = async (req, res) => {
-    try {
-        const archivedProjects = await Projects.findAll({ where: { iduser: req.query.iduser, archived: true } });
-
-        res.status(200).json({
-            archivedProjects
         });
     } catch(error) {
         console.log(error);
@@ -103,7 +91,7 @@ exports.EditProject = async (req, res) => {
     }
 
     try {
-        const project = await Projects.findByPk(req.params.idproject);
+        const project = await models.Projects.findByPk(req.params.idproject);
 
         if(project === null) {
             return res.status(400).json({
@@ -123,7 +111,7 @@ exports.EditProject = async (req, res) => {
     if(archived) toUpdate.archived = archived;
 
     try {
-        const result = await Projects.update(toUpdate, { where: { idproject: req.params.idproject } });
+        const result = await models.Projects.update(toUpdate, { where: { idproject: req.params.idproject } });
 
         console.log(result);
         res.status(200).json({
@@ -139,7 +127,7 @@ exports.EditProject = async (req, res) => {
 
 exports.DeleteProject = async (req, res) => {
     try {
-        const project = await Projects.findByPk(req.params.idproject);
+        const project = await models.Projects.findByPk(req.params.idproject);
 
         if(project === null) {
             return res.status(400).json({
@@ -153,12 +141,16 @@ exports.DeleteProject = async (req, res) => {
         });
     }
 
-    if(tasksController.DeleteTasksOfAProject(req.params.idproject) === false) {
-        return res.status(500);
+    const deleteTasks = await tasksController.DeleteTasksOfAProject(req.params.idproject);
+
+    if(!deleteTasks.result) {
+        return res.status(500).json({
+            message: deleteTasks.message
+        });
     }
 
     try {
-        const result = await Projects.destroy({ where: { idproject: idproject } });
+        const result = await models.Projects.destroy({ where: { idproject: req.params.idproject } });
 
         console.log(result);
         res.status(200).json({

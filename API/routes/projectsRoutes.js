@@ -8,8 +8,6 @@ module.exports = () => {
 
     router.get('/:iduser', projectsController.GetProjectsOfAUser);
 
-    router.get('', projectsController.GetArchivedProjectsOfAUser);
-
     router.put('/:idproject', projectsController.EditProject);
 
     router.delete('/:idproject', projectsController.DeleteProject);
