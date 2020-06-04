@@ -1,5 +1,4 @@
-const Tags = require('../models/Tags');
-const Users = require('../models/Users');
+const models = require('../models/index');
 
 const tasksTaggedController = require('../controllers/tasksTaggedController');
 
@@ -13,7 +12,7 @@ exports.CreateTag = async (req, res) => {
     }
 
     try {
-        const user = await Users.findByPk(iduser);
+        const user = await models.Users.findByPk(iduser);
 
         if(user === null) {
             return res.status(400).json({
@@ -28,7 +27,7 @@ exports.CreateTag = async (req, res) => {
     }
 
     try {
-        const result = await Tags.create({
+        const result = await models.Tags.create({
             iduser: iduser,
             tagname: tagname
         });
@@ -47,7 +46,7 @@ exports.CreateTag = async (req, res) => {
 
 exports.GetTagsOfAUser = async (req, res) => {
     try {
-        const user = await Users.findByPk(req.params.iduser);
+        const user = await models.Users.findByPk(req.params.iduser);
 
         if(user === null) {
             return res.status(400).json({
@@ -62,7 +61,7 @@ exports.GetTagsOfAUser = async (req, res) => {
     }
 
     try {
-        const tags = await Tags.findAll({ where: { iduser: req.params.iduser } });
+        const tags = await models.Tags.findAll({ where: { iduser: req.params.iduser } });
 
         return res.status(200).json({
             tags
@@ -83,7 +82,7 @@ exports.DeleteTag = async (req, res) => {
     }
 
     try {
-        const result = await Tags.destroy({ where: { idtag: req.params.idtag } });
+        const result = await models.Tags.destroy({ where: { idtag: req.params.idtag } });
 
         if(result === 0) {
             return res.status(400).json({
