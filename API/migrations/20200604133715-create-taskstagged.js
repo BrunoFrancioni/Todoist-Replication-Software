@@ -2,17 +2,27 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('taskstaggeds', {
-      id: {
+      idtasktagged: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
       idtask: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: tasks,
+            key: 'idtask'
+        }
       },
       idtag: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: tags,
+            key: 'idtag'
+        }
       },
       createdAt: {
         allowNull: false,

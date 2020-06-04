@@ -2,29 +2,51 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('tasks', {
-      id: {
+      idtask: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      iduser: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          references: {
+              model: users,
+              key: 'iduser'
+          }
+      },
+      idproject: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
+          references: {
+              model: projects,
+              key: 'idproject'
+          }
+      },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(100),
+        allowNull: false
       },
       content: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT,
+        allowNull: true
       },
       done: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        allowNull: false
       },
       day: {
-        type: Sequelize.DATEONLY
+        type: Sequelize.DATEONLY,
+        allowNull: false
       },
       time: {
-        type: Sequelize.TIME
+        type: Sequelize.TIME,
+        allowNull: true
       },
       deleted: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
