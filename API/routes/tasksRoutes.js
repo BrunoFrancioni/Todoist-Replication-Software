@@ -6,9 +6,11 @@ const tasksController = require('../controllers/tasksController');
 module.exports = () => {
     router.post('/', tasksController.createTask);
 
-    router.get('/:iduser', tasksController.getTasksOfUser);
+    router.get('/users/:iduser', tasksController.getTasksOfUser);
 
-    router.get('', tasksController.getTasksOfProject);
+    router.get('/projects/:idproject', tasksController.getTasksOfProject);
+
+    router.put('/:idtask', tasksController.UpdateTask);
 
     router.delete('/:idtask', tasksController.DeleteTask);
 
