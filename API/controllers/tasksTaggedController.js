@@ -92,9 +92,14 @@ exports.DeleteAllTagsOfATask = async (idtask) => {
         const result = await TasksTagged.destroy({ where: { idtask: idtask } });
 
         console.log(result);
-        return true;
+        return ({
+            result: true
+        });
     } catch(error) {
         console.log(error);
-        return false;
+        return ({
+            result: false,
+            message: error
+        });
     }
 }

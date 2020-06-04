@@ -2,10 +2,11 @@ const Tasks = require('../models/Tasks');
 const Users = require('../models/Users');
 const Projects = require('../models/Projects');
 const TasksTagged = require('../models/TasksTagged');
+const Tags = require('../models/Tags');
 
 const tasksTaggedController = require('../controllers/tasksTaggedController');
 
-exports.createTask = (req, res) => {
+exports.createTask = async (req, res) => {
     const { iduser, idproject, title, content, day, time } = req.body;
 
     if(!iduser || !title || !day) {
@@ -50,7 +51,7 @@ exports.createTask = (req, res) => {
         const result = await Tasks.create({
             iduser: iduser,
             idproject: (idproject) ? idproject : null,
-            title: title.charAt(0).toUppercase() + title.slice(1),
+            title: title,
             content: (content) ? content : null,
             done: false,
             day: day,
@@ -87,24 +88,52 @@ exports.getTasksOfUser = async (req, res) => {
     }
 
     try {
-        const tasks = await Tasks.findAll({
-            where: {
-                iduser: req.params.iduser
-            },
-            include: [{
-                TasksTagged
-            }]
-        });
+        if(req.query.deleted === true)  {
+            const tasks = await Tasks.findAll({
+                where: {
+                    iduser: req.params.iduser,
+                    deleted: true
+                },
+                include: [{
+                    model: TasksTagged,
+                    include: [{
+                        model: Tags
+                    }]
+                }]
+            });
 
-        if(tasks === null) {
-            return res.status(404).json({
-                message: 'Tasks not found.'
+            if(tasks === null) {
+                return res.status(404).json({
+                    message: 'Tasks not found.'
+                });
+            }
+    
+            return res.status(200).json({
+                tasks
+            });
+        } else {
+            const tasks = await Tasks.findAll({
+                where: {
+                    iduser: req.params.iduser
+                },
+                include: [{
+                    model: TasksTagged,
+                    include: [{
+                        model: Tags
+                    }]
+                }]
+            });
+
+            if(tasks === null) {
+                return res.status(404).json({
+                    message: 'Tasks not found.'
+                });
+            }
+    
+            return res.status(200).json({
+                tasks
             });
         }
-
-        return res.status(200).json({
-            tasks
-        });
     } catch(error) {
         console.log(error);
         return res.status(500).json({
@@ -130,24 +159,46 @@ exports.getTasksOfProject = async (req, res) => {
     }
 
     try {
-        const tasks = await Tasks.findAll({
-            where: {
-                idproject: req.query.idproject
-            },
-            include: [{
-                TasksTagged
-            }]
-        });
+        if(req.query.deleted === true)  {
+            const tasks = await Tasks.findAll({
+                where: {
+                    idproject: req.query.idproject,
+                    deleted: true
+                },
+                include: [{
+                    TasksTagged
+                }]
+            });
 
-        if(tasks === null) {
-            return res.status(404).json({
-                message: 'Tasks not found.'
+            if(tasks === null) {
+                return res.status(404).json({
+                    message: 'Tasks not found.'
+                });
+            }
+    
+            return res.status(200).json({
+                tasks
+            });
+        } else {
+            const tasks = await Tasks.findAll({
+                where: {
+                    idproject: req.query.idproject
+                },
+                include: [{
+                    TasksTagged
+                }]
+            });
+
+            if(tasks === null) {
+                return res.status(404).json({
+                    message: 'Tasks not found.'
+                });
+            }
+    
+            return res.status(200).json({
+                tasks
             });
         }
-
-        return res.status(200).json({
-            tasks
-        });
     } catch(error) {
         console.log(error);
         return res.status(500).json({
@@ -173,11 +224,11 @@ exports.DeleteTask = async (req, res) => {
     }
 
     try{
-        const result = Tasks.update({ deleted: true }, { where: { iduser: req.params.idtask } });
+        const result = await Tasks.update({ deleted: true }, { where: { idtask: req.params.idtask } });
 
         console.log(result);
         res.status(200).json({
-            message: 'Task updated.'
+            message: 'Task deleted.'
         });
     } catch(error) {
         console.log(error);
@@ -233,21 +284,33 @@ exports.UpdateTask = async (req, res) => {
 
 exports.DeleteTasksOfAProject = async (idproject) => {
     try {
-        const tasks = await Tasks.findAll({ where: { idproject = idproject } });
+        const tasks = await Tasks.findAll({ where: { idproject: idproject } });
 
         if(tasks === null) {
-            return true;
+            return ({
+                result: true
+            });
         }
 
         tasks.forEach(task => {
-            if(tasksTaggedController.DeleteAllTagsOfATask(task.idtask) === false ) {
-                return false;
+            const deleteTaskTagged = tasksTaggedController.DeleteAllTagsOfATask(task.idtask);
+
+            if(!deleteTaskTagged.result) {
+                return ({
+                    result: false,
+                    message: deleteTaskTagged.message
+                });
             }
         });
 
-        return true;
+        return ({
+            result: true
+        });
     } catch(error) {
         console.log(error);
-        return false;
+        return ({
+            result: false,
+            message: error
+        });
     }
 }

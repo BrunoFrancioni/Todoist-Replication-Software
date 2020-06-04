@@ -53,8 +53,6 @@ exports.LoginUser = async (req, res) => {
             error
         });
     }
-
-    
 }
 
 exports.CreateUser = async (req, res) => {
@@ -111,35 +109,6 @@ exports.CreateUser = async (req, res) => {
 }
 
 exports.UpdateUser = async (req, res) => {
-    try {
-        const user = Users.findByPk(req.params.iduser);
-
-        if(user === null) {
-            return res.status(400).json({
-                message: 'Bad user ID.'
-            });
-        }
-
-        if(oldPassword) {
-            bcrypt.compare(oldPassword, user.password, (err, result) => {
-                if(err) {
-                    return res.status(401).json({
-                        message: 'Wrong old password.'
-                    });
-                }
-    
-                if(result) {
-                    console.log(result);
-                }
-            });
-        }
-    } catch(error) {
-        console.log(error);
-        return res.status(500).json({
-            error
-        });
-    }
-
     const { name, lastname, newPassword, email, oldPassword } = req.body;
 
     let toUpdate = {};
@@ -154,19 +123,24 @@ exports.UpdateUser = async (req, res) => {
         });
     }
 
-    if(password) {
-        bcrypt.hash(password, 10, (err, hash) => {
-            if(err) {
-                return status(500).json({
-                    err
-                });
-            }
-    
-            if(hash) {
-                console.log(hash);
-                toUpdate.password = hash;
-            }
+    const checkUserAndPassword = CheckUserAndPassword(req.params.iduser, oldPassword);
+
+    if(!checkUserAndPassword.result) {
+        return res.status(checkUserAndPassword.status).json({
+            message: checkUserAndPassword.message
         });
+    }
+
+    if(newPassword) {
+        const hashPassword = await GeneratePasswordHashed(newPassword);
+        
+        if(!hashPassword.result) {
+            return res.status(hashPassword.status).json({
+                message: hashPassword.message
+            });
+        } else {
+            toUpdate.password = hashPassword.hash;
+        }
     }
 
     console.log(toUpdate);
@@ -190,6 +164,77 @@ exports.UpdateUser = async (req, res) => {
             error
         });
     }
+}
+
+const CheckUserAndPassword = async (iduser, oldPassword) => {
+    try {
+        const user = await Users.findByPk(iduser);
+
+        if(user === null) {
+            return ({
+                result: false,
+                status: 401,
+                message: 'User ID not valid.'
+            });
+        }
+
+        if(oldPassword) {
+            bcrypt.compare(oldPassword, user.password, (err, result) => {
+                if(err) {
+                    return ({
+                        result: false,
+                        status: 401,
+                        message: 'Bad old password.'
+                    });
+                }
+    
+                if(result) {
+                    return ({
+                        result: true
+                    });
+                }
+    
+                return ({
+                    result: false,
+                    status: 401,
+                    message: 'Bad old password.'
+                });
+            });
+        }
+    } catch(error) {
+        console.log(error);
+        return ({
+            result: false,
+            status: 500,
+            message: error
+        });
+    }
+}
+
+const GeneratePasswordHashed = async (newPassword) => {
+    bcrypt.hash(newPassword, 10, (err, hash) => {
+        if(err) {
+            return ({
+                result: false,
+                status:500,
+                message: err
+            });
+        }
+
+        if(hash) {
+            console.log(hash);
+            return ({
+                result: true,
+                hash
+            });
+        }
+
+        return ({
+            result: false,
+            status: 500,
+            message: 'error'
+        });
+    });
 }
 
 exports.DeleteUser = async (req, res) => {
