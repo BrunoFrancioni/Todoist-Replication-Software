@@ -1,4 +1,4 @@
-const Users = require('../models/Users');
+const models = require('../models/index');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -12,7 +12,7 @@ exports.LoginUser = async (req, res) => {
     }
 
     try {
-        const user = await Users.findOne({ where: { email: email } });
+        const user = await models.Users.findOne({ where: { email: email } });
 
         if(user === null) {
             return res.status(401).json({
@@ -65,7 +65,7 @@ exports.CreateUser = async (req, res) => {
     }
 
     try {
-        const user = await Users.findOne({ where: { email: email } });
+        const user = await models.Users.findOne({ where: { email: email } });
 
         if(user !== null) {
             return res.status(409).json({
@@ -86,7 +86,7 @@ exports.CreateUser = async (req, res) => {
             });
         } else {
             try {
-                const result = await Users.create({
+                const result = await models.Users.create({
                     name: name.toUpperCase(),
                     lastname: lastname.toUpperCase(),
                     password: hash,
@@ -239,7 +239,7 @@ const GeneratePasswordHashed = async (newPassword) => {
 
 exports.DeleteUser = async (req, res) => {
     try {
-        const result = await Users.destroy({ where: { iduser: req.params.iduser }});
+        const result = await models.Users.destroy({ where: { iduser: req.params.iduser }});
 
         if(result === 0) {
             return res.status(400).json({
