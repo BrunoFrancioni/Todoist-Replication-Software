@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
+const tasksTaggedController = require('../controllers/tasksTaggedController');
+
 module.exports = () => {
-    router.get('/', (req, res) => {
-        res.status(200).json({
-            "Estado": "Funcionando"
-        });
-    });
+    router.post('/', tasksTaggedController.CreateTaskTagged);
+
+    router.delete('/:idtasktagged', tasksTaggedController.DeleteTaskTagged);
 
     return router;
 }
