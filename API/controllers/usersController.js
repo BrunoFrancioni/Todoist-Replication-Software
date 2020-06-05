@@ -2,6 +2,10 @@ const models = require('../models/index');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const tagsController = require('./tagsController');
+const projectsController = require('./projectsController');
+const tasksController = require('./tasksController');
+
 exports.LoginUser = async (req, res) => {
     const { email, password } = req.body;
 
@@ -239,6 +243,30 @@ const GeneratePasswordHashed = async (newPassword) => {
 
 exports.DeleteUser = async (req, res) => {
     try {
+        const deleteTags = await tagsController.DeleteTagsOfAUser(req.params.iduser);
+
+        if(!deleteTags.result) {
+            return res.status(500).json({
+                message: deleteTags.message
+            });
+        }
+
+        const deleteTasks = await tasksController.DeleteTasksOfAUser(req.params.iduser);
+
+        if(!deleteTasks.result) {
+            return res.status(500).json({
+                message: deleteTasks.message
+            });
+        }
+
+        const deleteProjects = await projectsController.DeleteProjectsOfAUser(req.params.iduser);
+
+        if(!deleteProjects.result) {
+            return res.status(500).json({
+                message: deleteProjects.message
+            });
+        }
+
         const result = await models.Users.destroy({ where: { iduser: req.params.iduser }});
 
         if(result === 0) {

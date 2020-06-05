@@ -100,3 +100,45 @@ exports.DeleteTag = async (req, res) => {
             });
     }
 }
+
+exports.DeleteTagsOfAUser = async (iduser) => {
+    try {
+        let tags = await models.Tags.findAll({ attributes: ['idtag'], where: { iduser: iduser } });
+
+        if(tags.length === 0) {
+            return ({
+                result: true
+            });
+        }
+        
+        let string = JSON.stringify(tags);
+        console.log(string);
+        tags = JSON.parse(string);
+        console.log(tags);
+
+        tags.forEach(async (tag) => {
+            const deleteTagTagged = await tasksTaggedController.DeleteTaskTaggedFromTag(tag.idtag);
+
+            if(!deleteTagTagged.result) {
+                return ({
+                    result: false,
+                    message: deleteTagTagged.message
+                });
+            }
+
+            const deleteTags = await models.Tags.destroy({ where: { idtag: tag.idtag } });
+
+            console.log(deleteTags);
+        });
+        
+        return ({
+            result: true
+        });
+    } catch(error) {
+        console.log(error);
+        return ({
+            result: false,
+            message: error
+        });
+    }
+}

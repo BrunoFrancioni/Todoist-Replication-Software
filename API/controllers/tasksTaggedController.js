@@ -93,10 +93,15 @@ exports.DeleteTaskTaggedFromTag = async (idtag) => {
         const result = await models.TasksTagged.destroy({ where: { idtag: idtag } });
 
         console.log(result);
-        return true;
+        return ({
+            result: true
+        });
     } catch(error) {
         console.log(error);
-        return false;
+        return ({
+            result: false,
+            message: error
+        });
     }
 }
 

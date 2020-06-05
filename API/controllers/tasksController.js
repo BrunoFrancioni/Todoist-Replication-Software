@@ -232,23 +232,74 @@ exports.UpdateTask = async (req, res) => {
 
 exports.DeleteTasksOfAProject = async (idproject) => {
     try {
-        const tasks = await models.Tasks.findAll({ where: { idproject: idproject } });
+        let tasks = await models.Tasks.findAll({ attributes: ['idtask'], where: { idproject: idproject } });
 
-        if(tasks === null) {
+        if(tasks.length === null) {
             return ({
                 result: true
             });
         }
 
-        tasks.forEach(async (task) => {
-            const deleteTaskTagged = await tasksTaggedController.DeleteAllTagsOfATask(task.idtask);
+        string = JSON.stringify(tasks);
+        console.log(string);
+        tasks = JSON.parse(string);
+        console.log(tasks);
 
-            if(!deleteTaskTagged.result) {
+        tasks.forEach(async (task) => {
+            const deleteTasksTagged = await tasksTaggedController.DeleteAllTagsOfATask(task.idtask);
+
+            if(!deleteTasksTagged.result) {
                 return ({
                     result: false,
-                    message: deleteTaskTagged.message
+                    message: deleteTasksTagged.message
                 });
             }
+
+            const deleteTasks = await models.Tasks.destroy({ where: { idtask: task.idtask } });
+
+            console.log(deleteTasks);
+        });
+
+        return ({
+            result: true
+        });
+    } catch(error) {
+        console.log(error);
+        return ({
+            result: false,
+            message: error
+        });
+    }
+}
+
+exports.DeleteTasksOfAUser = async (iduser) => {
+    try {
+        let tasks = await models.Tasks.findAll({ attributes: ['idtask'], where: { iduser: iduser } });
+
+        if(tasks.length === 0) {
+            return ({
+                result: true
+            });
+        }
+
+        string = JSON.stringify(tasks);
+        console.log(string);
+        tasks = JSON.parse(string);
+        console.log(tasks);
+
+        tasks.forEach(async (task) => {
+            const deleteTasksTagged = await tasksTaggedController.DeleteAllTagsOfATask(task.idtask);
+
+            if(!deleteTasksTagged.result) {
+                return ({
+                    result: false,
+                    message: deleteTasksTagged.message
+                });
+            }
+
+            const deleteTasks = await models.Tasks.destroy({ where: { idtask: task.idtask } });
+
+            console.log(deleteTasks);
         });
 
         return ({

@@ -163,3 +163,45 @@ exports.DeleteProject = async (req, res) => {
         });
     }
 }
+
+exports.DeleteProjectsOfAUser = async (iduser) => {
+    try {
+        let userProjects = await models.Projects.findAll({ attributes: ['idproject'], where: { iduser: iduser } });
+
+        if(userProjects.length === 0) {
+            return ({
+                result: true
+            });
+        }
+
+        string = JSON.stringify(userProjects);
+        console.log(userProjects);
+        userProjects = JSON.parse(string);
+        console.log(userProjects);
+
+        userProjects.forEach(async (project) => {
+            const deleteProjectTasks = await tasksController.DeleteTasksOfAProject(project.idproject);
+
+            if(!deleteProjectTasks.result) {
+                return ({
+                    result: false,
+                    message: deleteProjectTasks.message
+                });
+            }
+
+            const deleteProjects = await models.Projects.destroy({ where: { idproject: project.idproject } });
+
+            console.log(deleteProjects);
+        });
+
+        return ({
+            result: true
+        });
+    } catch(error) {
+        console.log(error);
+        return ({
+            result: false,
+            message: error
+        });
+    }
+}
