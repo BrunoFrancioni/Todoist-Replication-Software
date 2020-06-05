@@ -1,10 +1,6 @@
-const Tasks = require('../models/Tasks');
-const Users = require('../models/Users');
-const Projects = require('../models/Projects');
-const TasksTagged = require('../models/TasksTagged');
-const Tags = require('../models/Tags');
+const models = require('../models/index');
 
-const tasksTaggedController = require('../controllers/tasksTaggedController');
+const tasksTaggedController = require('./tasksTaggedController');
 
 exports.createTask = async (req, res) => {
     const { iduser, idproject, title, content, day, time } = req.body;
@@ -16,7 +12,7 @@ exports.createTask = async (req, res) => {
     }
 
     try {
-        const user = await Users.findByPk(req.body.iduser);
+        const user = await models.Users.findByPk(req.body.iduser);
 
         if(user === null) {
             return res.status(400).json({
@@ -32,7 +28,7 @@ exports.createTask = async (req, res) => {
 
     if(idproject) {
         try {
-            const project = await Projects.findByPk(idproject);
+            const project = await models.Projects.findByPk(idproject);
     
             if(project === null) {
                 return res.status(400).json({
@@ -48,7 +44,7 @@ exports.createTask = async (req, res) => {
     }
 
     try {
-        const result = await Tasks.create({
+        const result = await models.Tasks.create({
             iduser: iduser,
             idproject: (idproject) ? idproject : null,
             title: title,
@@ -73,7 +69,7 @@ exports.createTask = async (req, res) => {
 
 exports.getTasksOfUser = async (req, res) => {
     try {
-        const user = await Users.findByPk(req.params.iduser);
+        const user = await models.Users.findByPk(req.params.iduser);
 
         if(user === null) {
             return res.status(400).json({
@@ -88,52 +84,25 @@ exports.getTasksOfUser = async (req, res) => {
     }
 
     try {
-        if(req.query.deleted === true)  {
-            const tasks = await Tasks.findAll({
-                where: {
-                    iduser: req.params.iduser,
-                    deleted: true
-                },
-                include: [{
-                    model: TasksTagged,
-                    include: [{
-                        model: Tags
-                    }]
-                }]
-            });
+        const tasks = await models.Tasks.findAll({
+            where: {
+                iduser: req.params.iduser,
+                deleted: (req.query.deleted) ? req.query.deleted : false
+            },
+            include: [{
+                model: models.Tags
+            }]
+        });
 
-            if(tasks === null) {
-                return res.status(404).json({
-                    message: 'Tasks not found.'
-                });
-            }
-    
-            return res.status(200).json({
-                tasks
-            });
-        } else {
-            const tasks = await Tasks.findAll({
-                where: {
-                    iduser: req.params.iduser
-                },
-                include: [{
-                    model: TasksTagged,
-                    include: [{
-                        model: Tags
-                    }]
-                }]
-            });
-
-            if(tasks === null) {
-                return res.status(404).json({
-                    message: 'Tasks not found.'
-                });
-            }
-    
-            return res.status(200).json({
-                tasks
+        if(tasks === null) {
+            return res.status(404).json({
+                message: 'Tasks not found.'
             });
         }
+
+        return res.status(200).json({
+            tasks
+        });
     } catch(error) {
         console.log(error);
         return res.status(500).json({
@@ -144,7 +113,7 @@ exports.getTasksOfUser = async (req, res) => {
 
 exports.getTasksOfProject = async (req, res) => {
     try {
-        const project = await Projects.findByPk(req.query.idproject);
+        const project = await models.Projects.findByPk(req.params.idproject);
 
         if(project === null) {
             return res.status(400).json({
@@ -159,46 +128,25 @@ exports.getTasksOfProject = async (req, res) => {
     }
 
     try {
-        if(req.query.deleted === true)  {
-            const tasks = await Tasks.findAll({
-                where: {
-                    idproject: req.query.idproject,
-                    deleted: true
-                },
-                include: [{
-                    TasksTagged
-                }]
-            });
+        const tasks = await models.Tasks.findAll({
+            where: {
+                idproject: req.params.idproject,
+                deleted: (req.query.deleted) ? req.query.deleted : false
+            },
+            include: [{
+                model: models.Tags
+            }]
+        });
 
-            if(tasks === null) {
-                return res.status(404).json({
-                    message: 'Tasks not found.'
-                });
-            }
-    
-            return res.status(200).json({
-                tasks
-            });
-        } else {
-            const tasks = await Tasks.findAll({
-                where: {
-                    idproject: req.query.idproject
-                },
-                include: [{
-                    TasksTagged
-                }]
-            });
-
-            if(tasks === null) {
-                return res.status(404).json({
-                    message: 'Tasks not found.'
-                });
-            }
-    
-            return res.status(200).json({
-                tasks
+        if(tasks === null) {
+            return res.status(404).json({
+                message: 'Tasks not found.'
             });
         }
+
+        return res.status(200).json({
+            tasks
+        });
     } catch(error) {
         console.log(error);
         return res.status(500).json({
@@ -209,7 +157,7 @@ exports.getTasksOfProject = async (req, res) => {
 
 exports.DeleteTask = async (req, res) => {
     try {
-        const tasks = await Tasks.findByPk(req.params.idtask);
+        const tasks = await models.Tasks.findByPk(req.params.idtask);
 
         if(tasks === null) {
             return res.status(400).json({
@@ -224,7 +172,7 @@ exports.DeleteTask = async (req, res) => {
     }
 
     try{
-        const result = await Tasks.update({ deleted: true }, { where: { idtask: req.params.idtask } });
+        const result = await models.Tasks.update({ deleted: true }, { where: { idtask: req.params.idtask } });
 
         console.log(result);
         res.status(200).json({
@@ -268,7 +216,7 @@ exports.UpdateTask = async (req, res) => {
     }
 
     try{
-        const result = Tasks.update(toUpdate, { where: { iduser: req.params.idtask } });
+        const result = models.Tasks.update(toUpdate, { where: { iduser: req.params.idtask } });
 
         console.log(result);
         res.status(200).json({
@@ -284,7 +232,7 @@ exports.UpdateTask = async (req, res) => {
 
 exports.DeleteTasksOfAProject = async (idproject) => {
     try {
-        const tasks = await Tasks.findAll({ where: { idproject: idproject } });
+        const tasks = await models.Tasks.findAll({ where: { idproject: idproject } });
 
         if(tasks === null) {
             return ({
@@ -292,8 +240,8 @@ exports.DeleteTasksOfAProject = async (idproject) => {
             });
         }
 
-        tasks.forEach(task => {
-            const deleteTaskTagged = tasksTaggedController.DeleteAllTagsOfATask(task.idtask);
+        tasks.forEach(async (task) => {
+            const deleteTaskTagged = await tasksTaggedController.DeleteAllTagsOfATask(task.idtask);
 
             if(!deleteTaskTagged.result) {
                 return ({
