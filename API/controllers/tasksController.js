@@ -188,12 +188,12 @@ exports.DeleteTask = async (req, res) => {
 
 exports.UpdateTask = async (req, res) => {
     const { idproject, title, content, done, day, time } = req.body;
-
+    
     let toUpdate = {};
 
     if(idproject !== undefined) toUpdate.idproject = idproject;
 
-    if(!title) toUpdate.title = title;
+    if(title) toUpdate.title = title;
 
     if(content !== undefined) {
         if(content === "") {
@@ -203,12 +203,12 @@ exports.UpdateTask = async (req, res) => {
         }
     }
 
-    if(!done) toUpdate.done = done;
+    if(done) toUpdate.done = done;
 
-    if(!day) toUpdate.day = day;
+    if(day) toUpdate.day = day;
 
     if(time !== undefined) toUpdate.time = time;
-
+    
     if(Object.keys(toUpdate).length === 0){
         return res.status(400).json({
             message: 'Nothing to change.'
@@ -216,7 +216,7 @@ exports.UpdateTask = async (req, res) => {
     }
 
     try{
-        const result = models.Tasks.update(toUpdate, { where: { iduser: req.params.idtask } });
+        const result = models.Tasks.update(toUpdate, { where: { idtask: req.params.idtask } });
 
         console.log(result);
         res.status(200).json({
