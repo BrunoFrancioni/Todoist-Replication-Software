@@ -180,15 +180,6 @@ exports.DeleteProjectsOfAUser = async (iduser) => {
         console.log(userProjects);
 
         userProjects.forEach(async (project) => {
-            const deleteProjectTasks = await tasksController.DeleteTasksOfAProject(project.idproject);
-
-            if(!deleteProjectTasks.result) {
-                return ({
-                    result: false,
-                    message: deleteProjectTasks.message
-                });
-            }
-
             const deleteProjects = await models.Projects.destroy({ where: { idproject: project.idproject } });
 
             console.log(deleteProjects);
