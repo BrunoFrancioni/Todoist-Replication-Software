@@ -127,118 +127,87 @@ exports.UpdateUser = async (req, res) => {
         });
     }
 
-    const checkUserAndPassword = CheckUserAndPassword(req.params.iduser, oldPassword);
-
-    if(!checkUserAndPassword.result) {
-        return res.status(checkUserAndPassword.status).json({
-            message: checkUserAndPassword.message
-        });
-    }
-
-    if(newPassword) {
-        const hashPassword = await GeneratePasswordHashed(newPassword);
-        
-        if(!hashPassword.result) {
-            return res.status(hashPassword.status).json({
-                message: hashPassword.message
-            });
-        } else {
-            toUpdate.password = hashPassword.hash;
-        }
-    }
-
-    console.log(toUpdate);
-
-    if(Object.keys(toUpdate).length === 0) {
-        return res.status(400).json({
-            message: 'Nothing to change.'
-        });
-    }
-
-    try {
-        const result = await Users.update(toUpdate, { where: { iduser: req.params.iduser } });
-
-        console.log(result);
-        return res.status(200).json({
-            message: 'User updated.'
-        });
-    } catch(error) {
-        console.log(error);
-        return res.status(500).json({
-            error
-        });
-    }
-}
-
-const CheckUserAndPassword = async (iduser, oldPassword) => {
-    try {
-        const user = await Users.findByPk(iduser);
-
-        if(user === null) {
-            return ({
-                result: false,
-                status: 401,
-                message: 'User ID not valid.'
-            });
-        }
-
-        if(oldPassword) {
+    if(oldPassword && newPassword) {
+        try {
+            const user = await models.Users.findByPk(req.params.iduser);
+    
+            if(user === null) {
+                return res.status(404).json({
+                    message: 'User ID not valid.'
+                });
+            }
+    
             bcrypt.compare(oldPassword, user.password, (err, result) => {
                 if(err) {
-                    return ({
-                        result: false,
-                        status: 401,
+                    return res.status(400).json({
                         message: 'Bad old password.'
                     });
                 }
-    
+
                 if(result) {
-                    return ({
-                        result: true
+                    console.log(result);
+
+                    bcrypt.hash(newPassword, 10, async (err, hash) => {
+                        if(err) {
+                            return res.status(500).json({
+                                err
+                            });
+                        }
+                
+                        if(hash) {
+                            toUpdate.password = hash;
+                            console.log(toUpdate);
+                            const result = await models.Users.update(toUpdate, { where: { iduser: req.params.iduser } });
+        
+                            console.log(result);
+                            return res.status(200).json({
+                                message: 'User updated.'
+                            });
+                        }
+                
+                        if(!err && !result) {
+                            return res.status(500).json({
+                                message: 'Server error'
+                            });
+                        }
                     });
                 }
-    
-                return ({
-                    result: false,
-                    status: 401,
-                    message: 'Bad old password.'
-                });
+
+                if(!err && !result) {
+                    return res.status(500).json({
+                        message: 'Bad old password.'
+                    });
+                }
+            });
+        } catch(error) {
+            console.log(error);
+            return res.status(500).json({
+                error
             });
         }
-    } catch(error) {
-        console.log(error);
-        return ({
-            result: false,
-            status: 500,
-            message: error
-        });
+    } else {
+        console.log(toUpdate);
+
+        if(Object.keys(toUpdate).length === 0) {
+            return res.status(400).json({
+                message: 'Nothing to change.'
+            });
+        }
+
+        try {
+            const result = await models.Users.update(toUpdate, { where: { iduser: req.params.iduser } });
+
+            console.log(result);
+            return res.status(200).json({
+                message: 'User updated.'
+            });
+        } catch(error) {
+            console.log(error);
+            return res.status(500).json({
+                error
+            });
+        }
     }
-}
-
-const GeneratePasswordHashed = async (newPassword) => {
-    bcrypt.hash(newPassword, 10, (err, hash) => {
-        if(err) {
-            return ({
-                result: false,
-                status:500,
-                message: err
-            });
-        }
-
-        if(hash) {
-            console.log(hash);
-            return ({
-                result: true,
-                hash
-            });
-        }
-
-        return ({
-            result: false,
-            status: 500,
-            message: 'error'
-        });
-    });
 }
 
 exports.DeleteUser = async (req, res) => {
