@@ -74,6 +74,34 @@ exports.GetTagsOfAUser = async (req, res) => {
     }
 }
 
+exports.UpdateTag = async (req, res) => {
+    const { tagname } = req.body;
+
+    if(!tagname) {
+        return res.status(400).json({
+            message: 'Nothing to change.'
+        });
+    }
+
+    try {
+        const result = await models.Tags.update({
+            tagname: tagname
+        }, { where: {
+            idtag: req.params.idtag
+        }});
+
+        console.log(result);
+        return res.status(200).json({
+            message: 'Tag updated.'
+        });
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            error
+        });
+    }
+}
+
 exports.DeleteTag = async (req, res) => {
     const result = tasksTaggedController.DeleteTaskTaggedFromTag(req.params.idtag);
 

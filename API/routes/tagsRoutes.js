@@ -8,6 +8,8 @@ module.exports = () => {
 
     router.get('/:iduser', tagsController.GetTagsOfAUser);
 
+    router.put('/:idtag', tagsController.UpdateTag);
+
     router.delete('/:idtag', tagsController.DeleteTag);
 
     return router;
