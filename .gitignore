@@ -104,7 +104,7 @@ dist
 .tern-port
 
 # Notion File
-Notion Pictures/
+# Notion Pictures/
 Database
 API/node_modules
 .idea
