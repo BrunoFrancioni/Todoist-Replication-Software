@@ -2,17 +2,18 @@ const express = require('express');
 const router = express.Router();
 
 const tasksController = require('../controllers/tasksController');
+const checkAuto = require('../middleware/check-auth');
 
 module.exports = () => {
-    router.post('/', tasksController.createTask);
+    router.post('/', checkAuto, tasksController.createTask);
 
-    router.get('/users/:iduser', tasksController.getTasksOfUser);
+    router.get('/users/:iduser', checkAuto, tasksController.getTasksOfUser);
 
-    router.get('/projects/:idproject', tasksController.getTasksOfProject);
+    router.get('/projects/:idproject', checkAuto, tasksController.getTasksOfProject);
 
-    router.put('/:idtask', tasksController.UpdateTask);
+    router.put('/:idtask', checkAuto, tasksController.UpdateTask);
 
-    router.delete('/:idtask', tasksController.DeleteTask);
+    router.delete('/:idtask', checkAuto, tasksController.DeleteTask);
 
     return router;
 }
