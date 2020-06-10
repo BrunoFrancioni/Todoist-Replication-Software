@@ -1,6 +1,5 @@
 # Todoist-Replication-Software :ledger:
 
-***
 
 ## Index of content.<a name="index"></a>
 
