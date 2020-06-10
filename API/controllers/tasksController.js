@@ -57,7 +57,18 @@ exports.createTask = async (req, res) => {
 
         console.log(result);
         res.status(201).json({
-            message: 'Task created.'
+            message: 'Task created.',
+            createdTask: {
+                idtask: result.idtask,
+                iduser: result.iduser,
+                idproject: result.idproject,
+                title: result.title,
+                content: result.content,
+                done: result.done,
+                day: result.day,
+                time: result.time,
+                deleted: result.deleted
+            }
         });
     } catch(error) {
         console.log(error);
