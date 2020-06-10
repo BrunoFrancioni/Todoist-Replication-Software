@@ -33,8 +33,13 @@ exports.CreateTag = async (req, res) => {
         });
 
         console.log(result);
-        res.status(200).json({
-            message: 'Tag created.'
+        res.status(201).json({
+            message: 'Tag created.',
+            createdTag: {
+                idtag: result.idtag,
+                iduser: result.iduser,
+                tagname: result.tagname
+            }
         });
     } catch(error) {
         console.log(error);
