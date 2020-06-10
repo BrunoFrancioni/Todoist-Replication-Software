@@ -36,7 +36,13 @@ exports.CreateProject = async (req, res) => {
         console.log(result);
 
         res.status(201).json({
-            message: 'Project created.'
+            message: 'Project created.',
+            createdProject: {
+                idproject: result.idproject,
+                iduser: result.iduser,
+                title: result.title,
+                archived: result.archived
+            }
         });
     } catch(error) {
         console.log(error);
