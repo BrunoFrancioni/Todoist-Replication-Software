@@ -62,7 +62,12 @@ exports.CreateTaskTagged = async (req, res) => {
 
         console.log(result);
         res.status(201).json({
-            message: 'Task tagged created.'
+            message: 'Task tagged created.',
+            createdTaskTagged: {
+                idtasktagged: result.idtasktagged,
+                idtask: result.idtask,
+                idtag: result.idtag
+            }
         });
     } catch(error) {
         console.log(error);
