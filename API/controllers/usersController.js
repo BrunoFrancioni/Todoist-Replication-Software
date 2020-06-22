@@ -65,7 +65,7 @@ exports.CreateUser = async (req, res) => {
     if(!name || !lastname || !email || !password) {
         return res.status(400).json({
             message: 'Name, lastname, email and password are required.'
-        });;
+        });
     }
 
     try {
