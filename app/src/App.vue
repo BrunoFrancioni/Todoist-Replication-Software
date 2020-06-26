@@ -1,16 +1,25 @@
 <template>
   <div id="app">
     <upbar />
+    <div class="container">
+      <div class="row">
+        <sidebar />
+        <h1>Prueba</h1>
+      </div>
+      
+    </div>
   </div>
 </template>
 
 <script>
   import Upbar from './components/navbars/Upbar'
+  import Sidebar from './components/navbars/Sidebar'
 
 export default {
   name: 'App',
   components: {
-    Upbar
+    Upbar,
+    Sidebar
   }
 }
 </script>
