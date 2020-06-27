@@ -15,7 +15,10 @@
                     <a class="nav-link" href="#"><i class="fas fa-plus text-white"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="fas fa-chart-line text-white"></i></a>
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-chart-line text-white mr-1"></i>
+                        <span class="text-white">0/0</span>
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#"><i class="fas fa-cog text-white"></i></a>
