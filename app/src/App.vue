@@ -4,9 +4,10 @@
     <div class="container">
       <div class="row">
         <sidebar />
-        <h1>Prueba</h1>
+        <transition>
+          <router-view />
+        </transition>
       </div>
-      
     </div>
   </div>
 </template>
@@ -25,5 +26,7 @@ export default {
 </script>
 
 <style>
-
+.bg-sidebar {
+  background-color: #fafafa;
+}
 </style>
