@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div class="ml-5">
+    <h1>Today</h1>
+  </div>
 </template>
 
 <script>
