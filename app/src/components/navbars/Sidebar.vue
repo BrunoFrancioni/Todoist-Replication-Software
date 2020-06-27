@@ -1,8 +1,14 @@
 <template>
-  <div class="row">
+  <div class="row mr-5 bg-sidebar">
     <ul class="nav nav-pills flex-column">
       <li class="nav-item">
-        <a class="nav-link active" href="#">Active</a>
+        <router-link to="/inbox" class="nav-link text-dark">Inbox</router-link>
+      </li>
+      <li class="nav-item">
+        <router-link to="/" class="nav-link text-dark font-weight-bold">Today</router-link>
+      </li>
+      <li class="nav-item">
+        <router-link to="/upcoming" class="nav-link text-dark">Upcoming</router-link>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
@@ -14,22 +20,33 @@
           <a class="dropdown-item" href="#">Separated link</a>
         </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
-      </li>
     </ul>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Sidebar'
+  name: 'Sidebar',
+  data: () => {
+    return {
+      active: ''
+    }
+  },
+  created: () => {
+    this.setActive('today');
+  },
+  methods: {
+    setActive: (active) => {
+      this.active = active;
+    }
+  }
 }
 </script>
 
 <style>
-
+.bg-sidebar {
+  background-color: #fafafa;
+  width: 50vh;
+  height: 500px;
+}
 </style>
