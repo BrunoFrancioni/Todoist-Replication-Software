@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <upbar />
+    <upbar v-on:setHomePage="setToday"/>
     <div class="container">
       <div class="row">
-        <sidebar />
+        <sidebar ref="sidebar" />
         <transition>
           <router-view />
         </transition>
@@ -21,6 +21,11 @@ export default {
   components: {
     Upbar,
     Sidebar
+  },
+  methods: {
+    setToday() {
+      this.$refs.sidebar.setActiveToday();
+    }
   }
 }
 </script>

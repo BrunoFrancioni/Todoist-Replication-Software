@@ -3,7 +3,9 @@
         <nav class="nav bg-danger container">
             <div class="form-inline">
                 <a class="navbar-brand" href="#"><i class="fas fa-bars text-white"></i></a>
-                <a href="#" class="nav-link"><i class="fas fa-home text-white"></i></a>
+                <div @click="setHomePage">
+                    <router-link to="/" class="nav-link"><i class="fas fa-home text-white"></i></router-link>
+                </div>
                 <form class="form-inline my-2 my-lg-0 input-group-sm">
                     <input class="form-control mr-sm-2" type="text" placeholder="Find">
                     <button class="btn"><i class="fas fa-search text-white"></i></button>
@@ -30,7 +32,12 @@
 
 <script>
 export default {
-    name: 'Upbar'
+    name: 'Upbar',
+    methods: {
+        setHomePage() {
+            this.$emit('setHomePage');
+        }
+    }
 }
 </script>
 
