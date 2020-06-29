@@ -31,9 +31,17 @@
         <span class="nav-link text-dark font-weight-bold">Projects</span>
       </li>
 
+      <li v-if="projects.length === 0" class="ml-3">
+        <p>No projects yet !</p>
+      </li>
+
       <li class="nav-item form-inline">
         <i class="fas fa-sort-amount-down"></i>
         <span class="nav-link text-dark font-weight-bold">Labels</span>
+      </li>
+
+      <li v-if="labels.length === 0" class="ml-3">
+        <p>No labels yet !</p>
       </li>
     </ul>
   </div>
@@ -46,7 +54,9 @@ export default {
     return {
       inboxActive: false,
       todayActive: false,
-      upcomingActive: false
+      upcomingActive: false,
+      projects: [],
+      labels: []
     }
   },
   created() {
