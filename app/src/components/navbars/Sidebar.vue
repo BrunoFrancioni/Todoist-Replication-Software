@@ -31,23 +31,37 @@
         <span class="nav-link text-dark font-weight-bold">Projects</span>
       </li>
 
-      <li v-if="projects.length === 0" class="ml-3">
-        <p>No projects yet !</p>
-      </li>
+      <div>
+        <li v-if="projects.length === 0" class="ml-3">
+          <p>No projects yet !</p>
+        </li>
+
+        <li class="ml-3" v-else v-for="(project, index) in projects" :key="index">
+          <p>{{ project.title }}</p>
+        </li>
+      </div>
 
       <li class="nav-item form-inline">
         <i class="fas fa-sort-amount-down"></i>
         <span class="nav-link text-dark font-weight-bold">Labels</span>
       </li>
 
-      <li v-if="labels.length === 0" class="ml-3">
-        <p>No labels yet !</p>
-      </li>
+      <div>
+        <li v-if="labels.length === 0" class="ml-3">
+          <p>No labels yet !</p>
+        </li>
+
+        <li class="ml-3" v-else v-for="label in labels" :key="label">
+          <p>{{ label.title }}</p>
+        </li>
+      </div>
     </ul>
   </div>
 </template>
 
 <script>
+import projectServices from '../../_services/project-services'
+
 export default {
   name: 'Sidebar',
   data: () => {
@@ -61,6 +75,7 @@ export default {
   },
   created() {
     this.setActiveToday();
+    this.getProjects();
   },
   methods: {
     setActiveInbox() {
@@ -77,6 +92,13 @@ export default {
       this.inboxActive = false;
       this.todayActive = false;
       this.upcomingActive = true;
+    },
+    async getProjects() {
+      const result = await projectServices.GetProjects(1);
+      console.log(result);
+      if(result.status === 200) {
+        this.projects = result.data.projects;
+      }
     }
   }
 }
