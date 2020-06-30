@@ -18,8 +18,8 @@ const app = express();
 
 
 app.use((req, res, next) => {
-    const fecha = new Date();
-    res.locals.fechaActual = fecha;
+    const date = new Date();
+    res.locals.actualDate = date;
     return next();
 });
 
