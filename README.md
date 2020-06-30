@@ -157,7 +157,7 @@ Saves all the tags that every task haves. If you add a tag to a task, one of thi
 
 '/projects/:idproject' → `put` marks the project as archived or changes the name of it.
 
-'/project/:idproject' → `delete` deletes all the projects of the user.
+'/project/:idproject' → `delete` deletes the project with all it's tasks.
 
 **Tags Table.**
 
