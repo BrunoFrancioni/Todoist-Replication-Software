@@ -72,7 +72,7 @@ exports.GetProjectsOfAUser = async (req, res) => {
         const projects = await models.Projects.findAll({
             where: {
                 iduser: req.params.iduser,
-                archived: (req.query.archived) ? req.query.archived : false
+                archived: (req.query.archived === 'true') ? true : false
             }
         });
 
