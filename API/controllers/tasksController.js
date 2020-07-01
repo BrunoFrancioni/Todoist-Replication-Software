@@ -1,4 +1,5 @@
 const models = require('../models/index');
+const Op = models.Sequelize.Op;
 
 const tasksTaggedController = require('./tasksTaggedController');
 
@@ -93,16 +94,40 @@ exports.getTasksOfUser = async (req, res) => {
             error
         });
     }
+    
+    let whereParams = {};
+
+    if(req.query.project === 'true') {
+        whereParams = {
+            iduser : req.params.iduser,
+            deleted : (req.query.deleted === 'true') ? true : false,
+            day: {
+                [Op.gte]: `${res.locals.actualDate.toISOString().slice(0,10)}`
+            }
+        }
+    } else {
+        console.log('Es false');
+        whereParams = {
+            iduser : req.params.iduser,
+            idproject : null,
+            deleted : (req.query.deleted === 'true') ? true : false,
+            day: {
+                [Op.gte]: `${res.locals.actualDate.toISOString().slice(0,10)}`
+            }
+        }
+    }
 
     try {
         const tasks = await models.Tasks.findAll({
-            where: {
-                iduser: req.params.iduser,
-                deleted: (req.query.deleted) ? req.query.deleted : false
-            },
+            where: whereParams,
             include: [{
                 model: models.Tags
-            }]
+            }, {
+                model: models.Projects
+            }],
+            order: [
+                ['day', 'ASC']
+            ]
         });
 
         if(tasks === null) {
@@ -146,7 +171,10 @@ exports.getTasksOfProject = async (req, res) => {
             },
             include: [{
                 model: models.Tags
-            }]
+            }],
+            order: [
+                ['day', 'ASC']
+            ]
         });
 
         if(tasks === null) {
