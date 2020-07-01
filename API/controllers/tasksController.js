@@ -106,7 +106,6 @@ exports.getTasksOfUser = async (req, res) => {
             }
         }
     } else {
-        console.log('Es false');
         whereParams = {
             iduser : req.params.iduser,
             idproject : null,
