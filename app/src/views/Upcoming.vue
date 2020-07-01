@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>Upcoming</h1>
+    <hr />
   </div>
 </template>
 

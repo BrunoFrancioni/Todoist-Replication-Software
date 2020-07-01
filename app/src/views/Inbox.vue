@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>Inbox</h1>
+    <hr />
   </div>
 </template>
 

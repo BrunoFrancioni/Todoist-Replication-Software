@@ -1,6 +1,7 @@
 <template>
   <div class="ml-5">
     <h1>Today</h1>
+    <hr />
   </div>
 </template>
 
