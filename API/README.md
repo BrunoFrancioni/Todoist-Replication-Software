@@ -54,13 +54,17 @@ Saves all the tags that every task haves. If you add a tag to a task, one of thi
 
 '/tasks/:idtask' → `put` changes information of a task.
 
-'/tasks/users/:iduser' →*`get`* returns all the tasks of the user.
+'/tasks/users/:iduser?deleted=false&project=true' → `get` returns all the tasks of the user that haves not being deleted and also the ones that belong to a Project.
 
-'/tasks/users/:iduser?deleted=true' → `get` returns all the tasks deleted of a user.
+'/tasks/users/:iduser?deleted=true&project=true' → `get` returns all the tasks deleted of a user and also the ones that belong to a Project.
 
-'/tasks/projects/:idproject' →*`get`* returns all the tasks that belongs to the project.
+'/tasks/users/:iduser?deleted=false&project=false' → `get` returns all the tasks of the user that haves not being deleted but without the ones that belong to a project.
 
-'/tasks/projects/:idproject?deleted=true' →*`get`* returns all the tasks  deleted that belongs to the project.
+'/tasks/users/:iduser?deleted=true&project=false' → `get` returns all the tasks deleted of a user but without the ones that belong to a project.
+
+'/tasks/projects/:idproject?deleted=false' → `get`  returns all the tasks that belongs to the project without the deleted ones.
+
+'/tasks/projects/:idproject?deleted=true' → `get` returns all the tasks  deleted that belongs to the project.
 
 '/tasks/:idtask' →`delete` marks as deleted the task.
 
@@ -68,13 +72,13 @@ Saves all the tags that every task haves. If you add a tag to a task, one of thi
 
 '/projects' →`post` creates a new project.
 
-'/projects/:iduser' → `get` returns all the not archived projects of the user.
+'/projects/:iduser?archived=false' → `get` returns all the not archived projects of the user.
 
 '/projects/:iduser?archived=true' → `get` returns all the archived projects of the user.
 
 '/projects/:idproject' → `put` marks the project as archived or changes the name of it.
 
-'/project/:idproject' → `delete` deletes the project with all it's tasks.
+'/project/:idproject' → `delete` deletes all the projects of the user.
 
 **Tags Table.**
 
