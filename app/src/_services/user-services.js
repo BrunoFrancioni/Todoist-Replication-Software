@@ -1,5 +1,7 @@
-import { authHeader } from '../_helpers/auth-header';
+import http from './http-common';
 
-exports.login = async (email, password) => {
+class userServices {
 
 }
+
+export default new userServices();

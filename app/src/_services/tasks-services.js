@@ -1,9 +1,7 @@
-import { authHeader } from '../_helpers/auth-header';
+import http from './http-common';
 
-const getTasks = async (iduser) => {
-
+class tasksServices {
+    
 }
 
-export const tasksServices = {
-    getTasks
-}
+export default new tasksServices();
