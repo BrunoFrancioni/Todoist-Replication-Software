@@ -1,4 +1,10 @@
-# app
+# APP Specification
+
+## Technologies to use.
+
+- [VueJS](https://vuejs.org)
+- [Bootstrap](https://getbootstrap.com)
+- [Axios](https://github.com/axios/axios)
 
 ## Project setup
 ```

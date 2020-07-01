@@ -12,7 +12,6 @@
         - [Projects page](#projectsPage)
 - [Section 2 - My Personal Replication](#section2)
     - [What defines success for this project?](#successproject)
-    - [Technologies to use](#technologies)
     - [Technicals details of our software](#technicaldetails)
         - [System Constraints](#constraints)
         - [Working behaviour of the system views](#behaviour)
