@@ -122,10 +122,14 @@ exports.getTasksOfUser = async (req, res) => {
             include: [{
                 model: models.Tags
             }, {
-                model: models.Projects
+                model: models.Projects,
+                where: {
+                    archived: false
+                }
             }],
             order: [
-                ['day', 'ASC']
+                ['day', 'ASC'],
+                ['time', 'ASC']
             ]
         });
 
@@ -172,7 +176,8 @@ exports.getTasksOfProject = async (req, res) => {
                 model: models.Tags
             }],
             order: [
-                ['day', 'ASC']
+                ['day', 'ASC'],
+                ['time', 'ASC']
             ]
         });
 
