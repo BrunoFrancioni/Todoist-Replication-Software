@@ -51,8 +51,8 @@
           <p>No labels yet !</p>
         </li>
 
-        <li class="ml-3" v-else v-for="label in labels" :key="label">
-          <p>{{ label.title }}</p>
+        <li class="ml-3" v-else v-for="(label, index) in labels" :key="index">
+          <p>{{ label.tagname }}</p>
         </li>
       </div>
     </ul>
@@ -61,6 +61,7 @@
 
 <script>
 import projectServices from '../../_services/project-services'
+import tagsServices from '../../_services/tags-services'
 
 export default {
   name: 'Sidebar',
@@ -76,6 +77,7 @@ export default {
   created() {
     this.setActiveToday();
     this.getProjects();
+    this.getLabels();
   },
   methods: {
     setActiveInbox() {
@@ -94,11 +96,17 @@ export default {
       this.upcomingActive = true;
     },
     async getProjects() {
-      const result = await projectServices.GetProjects(1);
+      const result = await projectServices.GetProjects(this.$parent.userInfo.iduser);
       console.log(result);
       if(result.status === 200) {
         this.projects = result.data.projects;
       }
+    },
+    async getLabels() {
+      const result = await tagsServices.GetTags(this.$parent.userInfo.iduser);
+      console.log(result);
+
+      if(result.status === 200) this.labels = result.data.tags;
     }
   }
 }
