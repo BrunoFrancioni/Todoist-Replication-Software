@@ -22,6 +22,11 @@ export default {
     Upbar,
     Sidebar
   },
+  data() {
+    return {
+      userInfo: JSON.parse(atob(process.env.VUE_APP_DEV_TOKEN.split('.')[1]))
+    }
+  },
   methods: {
     setToday() {
       this.$refs.sidebar.setActiveToday();
