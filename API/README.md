@@ -14,7 +14,7 @@
 
 ### Database design.
 
-![Database Design](/NotionPictures/database_design.png 'Database Design')
+![Database Design](../NotionPictures/database_design.png 'Database Design')
 
 **Users Table.**
 
