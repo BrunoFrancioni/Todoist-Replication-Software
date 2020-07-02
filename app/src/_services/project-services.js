@@ -3,31 +3,20 @@ import http from './http-common';
 class projectServices {
     CreateProject = async (data) => {
         try {
-            const project = await http.post('/projects', data);
+            const result = await http.post('/projects', data);
 
-            return project;
+            return result;
         } catch(error) {
             console.log(error);
             return [];
         }
     }
 
-    GetProjects = async (iduser) => {
+    GetProjects = async (iduser, archived) => {
         try {
-            const projects = await http.get(`/projects/${iduser}`);
+            const result = await http.get(`/projects/${iduser}?archived=${archived}`);
 
-            return projects;
-        } catch(error) {
-            console.log(error);
-            return [];
-        }
-    }
-
-    GetProjectsArchived = async (iduser) => {
-        try {
-            const projects = await http.get(`/projects/${iduser}?archived=true`);
-
-            return projects;
+            return result;
         } catch(error) {
             console.log(error);
             return [];
