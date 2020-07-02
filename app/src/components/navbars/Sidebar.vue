@@ -116,6 +116,6 @@ export default {
 .bg-sidebar {
   background-color: #fafafa;
   width: 50vh;
-  height: 500px;
+  min-height: 100vh;
 }
 </style>
