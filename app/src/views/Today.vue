@@ -2,7 +2,9 @@
   <b-col class="" cols="12" md="8">
     <h1>Today</h1>
     <hr />
-    <tasks v-bind:tasks="tasks" />
+
+    <tasks v-if="tasks.length > 0" v-bind:tasks="tasks" />
+    <p v-else>No tasks for today.</p>
   </b-col>
 </template>
 
@@ -28,7 +30,8 @@ export default {
       const iduser = this.$parent.userInfo.iduser;
       const options = {
         deleted: false,
-        project: true
+        project: true,
+        today: true
       }
 
       const result = await tasksServices.GetUserTasks(iduser, options);

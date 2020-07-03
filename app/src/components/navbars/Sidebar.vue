@@ -1,5 +1,5 @@
 <template>
-  <b-col class="row bg-sidebar" cols="6" md="4">
+  <b-col class="row bg-sidebar mr-1" cols="6" md="4">
     <ul class="nav nav-pills flex-column pl-3 pt-2">
       <li class="nav-item form-inline" @click="setActiveInbox()">
         <i class="fas fa-inbox"></i>
@@ -115,7 +115,7 @@ export default {
 <style>
 .bg-sidebar {
   background-color: #fafafa;
-  width: 50vh;
+  max-width: 60%;
   min-height: 100vh;
 }
 </style>
