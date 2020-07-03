@@ -14,7 +14,7 @@ class tasksServices {
 
     GetUserTasks = async (iduser, options) => {
         try {
-            const result = await http.get(`/tasks/users/${iduser}?deleted=${options.deleted}&project=${options.project}`);
+            const result = await http.get(`/tasks/users/${iduser}?deleted=${options.deleted}&project=${options.project}&today=${options.today}`);
 
             return result;
         } catch(error) {
