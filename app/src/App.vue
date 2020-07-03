@@ -1,14 +1,14 @@
 <template>
   <div id="app">
     <upbar v-on:setHomePage="setToday"/>
-    <div class="container">
+    <b-container>
       <div class="row">
         <sidebar ref="sidebar" />
         <transition>
           <router-view />
         </transition>
       </div>
-    </div>
+    </b-container>
   </div>
 </template>
 
