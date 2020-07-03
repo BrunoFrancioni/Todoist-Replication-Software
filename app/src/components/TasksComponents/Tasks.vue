@@ -1,12 +1,10 @@
 <template>
   <div class="tasks">
-    <ul>
-      <task 
+    <task 
       v-for="(task, index) in tasks" 
       :key="index" 
       v-bind:task="task" 
     />
-    </ul>
   </div>
 </template>
 
