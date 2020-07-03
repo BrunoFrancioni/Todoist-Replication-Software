@@ -95,24 +95,22 @@ exports.getTasksOfUser = async (req, res) => {
         });
     }
     
-    let whereParams = {};
+    let whereParams = {
+        iduser : req.params.iduser,
+        deleted : (req.query.deleted === 'true') ? true : false
+    };
 
-    if(req.query.project === 'true') {
-        whereParams = {
-            iduser : req.params.iduser,
-            deleted : (req.query.deleted === 'true') ? true : false,
-            day: {
-                [Op.gte]: `${res.locals.actualDate.toISOString().slice(0,10)}`
-            }
+    if(req.query.project === 'false') {
+        whereParams.idproject = null;
+    }
+
+    if(req.query.today === 'true') {
+        whereParams.day = {
+            [Op.eq]: `${res.locals.actualDate.toISOString().slice(0,10)}`
         }
     } else {
-        whereParams = {
-            iduser : req.params.iduser,
-            idproject : null,
-            deleted : (req.query.deleted === 'true') ? true : false,
-            day: {
-                [Op.gte]: `${res.locals.actualDate.toISOString().slice(0,10)}`
-            }
+        whereParams.day = {
+            [Op.gte]: `${res.locals.actualDate.toISOString().slice(0,10)}`
         }
     }
 
