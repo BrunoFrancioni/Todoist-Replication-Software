@@ -1,5 +1,5 @@
 <template>
-  <div class="row mr-5 bg-sidebar">
+  <b-col class="row bg-sidebar" cols="6" md="4">
     <ul class="nav nav-pills flex-column pl-3 pt-2">
       <li class="nav-item form-inline" @click="setActiveInbox()">
         <i class="fas fa-inbox"></i>
@@ -56,7 +56,7 @@
         </li>
       </div>
     </ul>
-  </div>
+  </b-col>
 </template>
 
 <script>
