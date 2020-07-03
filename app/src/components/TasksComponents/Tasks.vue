@@ -1,10 +1,24 @@
 <template>
-  <div></div>
+  <div class="tasks">
+    <ul>
+      <task 
+      v-for="(task, index) in tasks" 
+      :key="index" 
+      v-bind:task="task" 
+    />
+    </ul>
+  </div>
 </template>
 
 <script>
-export default {
+import Task from './Task.vue'
 
+export default {
+  name: 'Tasks',
+  components: {
+    Task
+  },
+  props: ['tasks']
 }
 </script>
 
