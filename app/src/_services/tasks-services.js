@@ -12,9 +12,31 @@ class tasksServices {
         }
     }
 
-    GetUserTasks = async (iduser, options) => {
+    GetTodayUserTasks = async (iduser) => {
         try {
-            const result = await http.get(`/tasks/users/${iduser}?deleted=${options.deleted}&project=${options.project}&today=${options.today}`);
+            const result = await http.get(`/tasks/users/${iduser}/today`);
+
+            return result;
+        } catch(error) {
+            console.log(error);
+            return [];
+        }
+    }
+
+    GetInboxUserTasks = async (iduser) => {
+        try {
+            const result = await http.get(`/tasks/users/${iduser}/inbox`);
+
+            return result;
+        } catch(error) {
+            console.log(error);
+            return [];
+        }
+    }
+
+    GetUpcomingUserTasks = async (iduser) => {
+        try {
+            const result = await http.get(`/tasks/users/${iduser}/upcoming`);
 
             return result;
         } catch(error) {
