@@ -1,6 +1,7 @@
 <template>
   <b-col class="" cols="12" md="8">
-    <h1>Today</h1>
+    <h1>Today <span class="h6 text-secondary">{{today }}</span></h1>
+    
     <hr />
 
     <tasks v-if="tasks.length > 0" v-bind:tasks="tasks" />
@@ -19,7 +20,8 @@ export default {
   },
   data() {
     return {
-      tasks: []
+      tasks: [],
+      today: (new Date()).toUTCString().slice(0, 11)
     }
   },
   created() {
@@ -28,13 +30,8 @@ export default {
   methods: {
     async getTasks() {
       const iduser = this.$parent.userInfo.iduser;
-      const options = {
-        deleted: false,
-        project: true,
-        today: true
-      }
 
-      const result = await tasksServices.GetUserTasks(iduser, options);
+      const result = await tasksServices.GetTodayUserTasks(iduser);
       console.log(result);
       if(result.status === 200) {
         this.tasks = result.data.tasks;
