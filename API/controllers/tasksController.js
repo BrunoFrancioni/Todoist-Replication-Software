@@ -79,7 +79,7 @@ exports.createTask = async (req, res) => {
     }
 }
 
-exports.getTasksOfUser = async (req, res) => {
+exports.getTodayUserTasks = async (req, res) => {
     try {
         const user = await models.Users.findByPk(req.params.iduser);
 
@@ -95,35 +95,186 @@ exports.getTasksOfUser = async (req, res) => {
         });
     }
     
-    let whereParams = {
-        iduser : req.params.iduser,
-        deleted : (req.query.deleted === 'true') ? true : false
-    };
+    try {
+        const tasks = await models.Tasks.findAll({
+            where: {
+                iduser : req.params.iduser,
+                day : {
+                    [Op.eq]: `${res.locals.actualDate.toISOString().slice(0,10)}`
+                }
+            },
+            include: [
+                {
+                    model: models.Projects,
+                    where: {
+                        archived: false
+                    },
+                    required: false
+                },
+                {
+                model: models.Tags
+                }
+            ],
+            order: [
+                ['day', 'ASC'],
+                ['time', 'ASC']
+            ]
+        });
 
-    if(req.query.project === 'false') {
-        whereParams.idproject = null;
+        if(tasks === null) {
+            return res.status(404).json({
+                message: 'Tasks not found.'
+            });
+        }
+
+        return res.status(200).json({
+            tasks
+        });
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            error
+        });
     }
+}
 
-    if(req.query.today === 'true') {
-        whereParams.day = {
-            [Op.eq]: `${res.locals.actualDate.toISOString().slice(0,10)}`
+exports.getInboxUserTasks = async (req, res) => {
+    try {
+        const user = await models.Users.findByPk(req.params.iduser);
+
+        if(user === null) {
+            return res.status(400).json({
+                message: 'User ID not valid.'
+            });
         }
-    } else {
-        whereParams.day = {
-            [Op.gte]: `${res.locals.actualDate.toISOString().slice(0,10)}`
-        }
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            error
+        });
     }
 
     try {
         const tasks = await models.Tasks.findAll({
-            where: whereParams,
+            where: {
+                iduser : req.params.iduser,
+                day : {
+                    [Op.eq]: `${res.locals.actualDate.toISOString().slice(0,10)}`
+                },
+                idproject: null
+            },
+            include: [{
+                model: models.Tags
+            }],
+            order: [
+                ['day', 'ASC'],
+                ['time', 'ASC']
+            ]
+        });
+
+        if(tasks === null) {
+            return res.status(404).json({
+                message: 'Tasks not found.'
+            });
+        }
+
+        return res.status(200).json({
+            tasks
+        });
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            error
+        });
+    }
+}
+
+exports.getUpcomingUserTasks = async (req, res) => {
+    try {
+        const user = await models.Users.findByPk(req.params.iduser);
+
+        if(user === null) {
+            return res.status(400).json({
+                message: 'User ID not valid.'
+            });
+        }
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            error
+        });
+    }
+
+    try {
+        const tasks = await models.Tasks.findAll({
+            where: {
+                iduser : req.params.iduser,
+                day : {
+                    [Op.gte]: `${res.locals.actualDate.toISOString().slice(0,10)}`
+                }
+            },
             include: [{
                 model: models.Tags
             }, {
                 model: models.Projects,
                 where: {
                     archived: false
-                }
+                },
+                required: false
+            }],
+            order: [
+                ['day', 'ASC'],
+                ['time', 'ASC']
+            ]
+        });
+
+        if(tasks === null) {
+            return res.status(404).json({
+                message: 'Tasks not found.'
+            });
+        }
+
+        return res.status(200).json({
+            tasks
+        });
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            error
+        });
+    }
+}
+
+exports.getDeletedUserTasks = async (req, res) => {
+    try {
+        const user = await models.Users.findByPk(req.params.iduser);
+
+        if(user === null) {
+            return res.status(400).json({
+                message: 'User ID not valid.'
+            });
+        }
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            error
+        });
+    }
+
+    try {
+        const tasks = await models.Tasks.findAll({
+            where: {
+                iduser : req.params.iduser,
+                deleted : true
+            },
+            include: [{
+                model: models.Tags
+            }, {
+                model: models.Projects,
+                where: {
+                    archived: false
+                },
+                required: false
             }],
             order: [
                 ['day', 'ASC'],
