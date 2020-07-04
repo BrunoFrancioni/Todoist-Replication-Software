@@ -31,13 +31,17 @@
         <span class="nav-link text-dark font-weight-bold">Projects</span>
       </li>
 
-      <div>
-        <li v-if="projects.length === 0" class="ml-3">
+      <div class="ml-3 mb-3">
+        <li v-if="projects.length === 0">
           <p>No projects yet !</p>
         </li>
 
-        <li class="ml-3" v-else v-for="(project, index) in projects" :key="index">
+        <li v-else v-for="(project, index) in projects" :key="index">
           <p>{{ project.title }}</p>
+        </li>
+
+        <li>
+          <b-link class="text-secondary"><i class="fas fa-plus"></i> <span>Add project</span></b-link>
         </li>
       </div>
 
@@ -46,13 +50,17 @@
         <span class="nav-link text-dark font-weight-bold">Labels</span>
       </li>
 
-      <div>
-        <li v-if="labels.length === 0" class="ml-3">
+      <div class="ml-3">
+        <li v-if="labels.length === 0">
           <p>No labels yet !</p>
         </li>
 
-        <li class="ml-3" v-else v-for="(label, index) in labels" :key="index">
+        <li v-else v-for="(label, index) in labels" :key="index">
           <p>{{ label.tagname }}</p>
+        </li>
+
+        <li>
+          <b-link class="text-secondary"><i class="fas fa-plus"></i> <span>Add label</span></b-link>
         </li>
       </div>
     </ul>
