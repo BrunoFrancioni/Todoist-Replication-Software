@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <b-col cols="12" md="8">
     <h1>Upcoming</h1>
     <hr />
-  </div>
+  </b-col>
 </template>
 
 <script>
