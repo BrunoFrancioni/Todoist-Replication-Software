@@ -101,7 +101,8 @@ exports.getTodayUserTasks = async (req, res) => {
                 iduser : req.params.iduser,
                 day : {
                     [Op.eq]: `${res.locals.actualDate.toISOString().slice(0,10)}`
-                }
+                },
+                deleted: false
             },
             include: [
                 {
@@ -161,7 +162,8 @@ exports.getInboxUserTasks = async (req, res) => {
                 day : {
                     [Op.eq]: `${res.locals.actualDate.toISOString().slice(0,10)}`
                 },
-                idproject: null
+                idproject: null,
+                deleted: false
             },
             include: [{
                 model: models.Tags
@@ -211,7 +213,8 @@ exports.getUpcomingUserTasks = async (req, res) => {
                 iduser : req.params.iduser,
                 day : {
                     [Op.gte]: `${res.locals.actualDate.toISOString().slice(0,10)}`
-                }
+                },
+                deleted: false
             },
             include: [{
                 model: models.Tags
