@@ -1,4 +1,5 @@
 import http from './http-common';
+import qs from 'qs';
 
 class tasksServices {
     CreateTask = async (data) => {
@@ -58,8 +59,9 @@ class tasksServices {
 
     EditTask = async (idtask, data) => {
         try {
-            const result = await http.put(`/tasks/${idtask}`, data);
-
+            
+            const result = await http.put(`/tasks/${idtask}`, qs.stringify(data));
+            
             return result;
         } catch(error) {
             console.log(error);
