@@ -4,7 +4,7 @@ import axios from 'axios';
 export default axios.create({
     baseURL: `${process.env.VUE_APP_DEV_URL}`,
     headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
         "Authorization": `Bearer ${process.env.VUE_APP_DEV_TOKEN}`
     }
 });
