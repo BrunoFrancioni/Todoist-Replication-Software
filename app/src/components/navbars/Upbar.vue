@@ -13,8 +13,8 @@
             </div>
 
             <ul class="nav form-inline ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="fas fa-plus text-white"></i></a>
+                <li class="nav-item add-task">
+                    <a class="nav-link" @click="showCreateTaskModal"><i class="fas fa-plus text-white"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
@@ -36,11 +36,16 @@ export default {
     methods: {
         setHomePage() {
             this.$emit('setHomePage');
+        },
+        showCreateTaskModal() {
+            this.$emit('showModal');
         }
     }
 }
 </script>
 
 <style>
-
+li.add-task:hover {
+    cursor: pointer;
+}
 </style>
