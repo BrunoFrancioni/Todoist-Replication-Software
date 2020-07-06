@@ -3,7 +3,13 @@
       <b-row align-h="between">
         <b-col cols="6" md="4">
           <b-row align-h="start">
-            <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-0" :aria-checked="task.done"></b-form-checkbox>
+            <div @click="changeDoneStatus">
+              <b-form-checkbox 
+              class="mb-2 mr-sm-2 mb-sm-0" 
+              v-model="task.done"
+            ></b-form-checkbox>
+            </div>
+            
             <p>{{ task.title }}</p>
           </b-row>
         </b-col>
@@ -26,8 +32,8 @@
           
         <b-col cols="6" md="4">
           <b-row align-h="end" class="pr-3">
-            <p v-if="task.idproject === null">Inbox</p>
-            <p v-else>{{ task.Project.title }}</p>
+            <p v-if="task.idproject === null" class="text-secondary">Inbox</p>
+            <p v-else class="text-secondary">{{ task.Project.title }}</p>
           </b-row>
         </b-col>
       </b-row>
@@ -36,6 +42,8 @@
 </template>
 
 <script>
+import tasksServices from '../../_services/tasks-services'
+
 export default {
   name: 'Task',
   props: ['task'],
@@ -60,6 +68,22 @@ export default {
   methods: {
     getMonth(month) {
       return this.months[month];
+    },
+    async changeDoneStatus() {
+      const data = {
+        done : `${this.task.done}`
+      }
+      console.log(typeof(this.task.done));
+      const result = await tasksServices.EditTask(this.task.idtask, data);
+      console.log(result);
+      if(result.status !== 200) {
+        console.log('Ocurrió un error');
+        if(this.task.done === false) {
+          this.task.done = true;
+        } else {
+          this.task.done = false;
+        }
+      }
     }
   }
 }
