@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import tasksServices from '../_services/tasks-services'
 import Tasks from '../components/TasksComponents/Tasks'
 
 export default {
@@ -27,7 +28,11 @@ export default {
     },
     methods: {
         async getTasks() {
-
+            const result = await tasksServices.GetProjectTasks(project.idproject);
+            console.log(result);
+            if(result.status === 200) {
+                this.tasks = result.data.tasks;
+            }
         }
     }
 }
