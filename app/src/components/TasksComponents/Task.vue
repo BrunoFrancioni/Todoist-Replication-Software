@@ -1,14 +1,22 @@
 <template>
-  <div class="ml-4 mr-3">
+  <div class="task ml-4 mr-3" @click="showModal">
       <b-row align-h="between">
         <b-col cols="6" md="4">
           <b-row align-h="start">
-            <div @click="changeDoneStatus">
-              <b-form-checkbox 
+            <!--  
+            <b-form-checkbox 
               class="mb-2 mr-sm-2 mb-sm-0" 
               v-model="task.done"
+              @click="changeDoneStatus"
             ></b-form-checkbox>
-            </div>
+             -->
+            
+            <input 
+              type="checkbox" 
+              class="control-input mt-1 mr-1"
+              v-model="task.done" 
+              @click="changeDoneStatus"
+            >
             
             <p>{{ task.title }}</p>
           </b-row>
@@ -37,7 +45,16 @@
           </b-row>
         </b-col>
       </b-row>
+
+      <b-row v-if="task.Tags.length !== 0">
+        <span 
+          class="badge badge-warning mr-2"
+          v-for="(tag, index) in task.Tags"
+          :key="index"
+        >{{ tag.tagname }}</span>
+      </b-row>
       <hr>
+  
   </div>
 </template>
 
@@ -71,19 +88,25 @@ export default {
     },
     async changeDoneStatus() {
       const data = {
-        done : `${this.task.done}`
-      }
-      console.log(typeof(this.task.done));
+        'done': `${this.task.done}`
+      };
+      console.log(data);
+      
       const result = await tasksServices.EditTask(this.task.idtask, data);
       console.log(result);
       if(result.status !== 200) {
         console.log('Ocurrió un error');
+        console.log(this.task.done);
         if(this.task.done === false) {
           this.task.done = true;
         } else {
           this.task.done = false;
         }
       }
+      console.log(this.task.done);
+    },
+    showModal() {
+      this.$emit('showModal', this.task);
     }
   }
 }
@@ -92,5 +115,8 @@ export default {
 <style>
   .color-red {
     color: #d1453b;
+  }
+  div.task:hover {
+    cursor: pointer;
   }
 </style>
