@@ -14,7 +14,7 @@
 
             <ul class="nav form-inline ml-auto">
                 <li class="nav-item add-task">
-                    <a class="nav-link" @click="showCreateTaskModal"><i class="fas fa-plus text-white"></i></a>
+                    <a class="nav-link" @click="showCreateTaskModal"><i class="fas fa-plus text-white add-task-button"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
@@ -22,8 +22,8 @@
                         <span class="text-white">0/0</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="fas fa-cog text-white"></i></a>
+                <li class="nav-item add-task">
+                    <a class="nav-link" href="#"><i class="fas fa-cog text-white add-task-button"></i></a>
                 </li>
             </ul>
         </nav>
@@ -47,5 +47,10 @@ export default {
 <style>
 li.add-task:hover {
     cursor: pointer;
+}
+i.add-task-button:hover {
+    background-color:#cec4b4!important;
+    border-radius: 2px;
+    padding: 3px;
 }
 </style>
