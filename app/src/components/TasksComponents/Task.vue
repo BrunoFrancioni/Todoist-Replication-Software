@@ -1,5 +1,5 @@
 <template>
-  <div class="task ml-4 mr-3" @click="showModal">
+  <div class="task ml-4 mr-3">
       <b-row align-h="between">
         <b-col cols="6" md="4">
           <b-row align-h="start">
@@ -24,7 +24,16 @@
           
         <b-col cols="6" md="4" align-h="start">
           <b-row align-h="end" class="pr-3">
-            <i class="fas fa-pencil-alt"></i>
+            <i 
+              class="fas fa-info mr-3 cursor" 
+              @click="showInfoModal"
+              v-b-tooltip.hover title="See details"  
+            ></i>
+            <i 
+              class="fas fa-pencil-alt cursor" 
+              @click="showEditModal" 
+              v-b-tooltip.hover title="Edit task"
+            ></i>
           </b-row>
         </b-col>
       </b-row>
@@ -105,8 +114,11 @@ export default {
       }
       console.log(this.task.done);
     },
-    showModal() {
-      this.$emit('showModal', this.task);
+    showInfoModal() {
+      this.$emit('showInfoModal', this.task);
+    },
+    showEditModal() {
+      this.$emit('showEditModal', this.task);
     }
   }
 }
@@ -116,7 +128,10 @@ export default {
   .color-red {
     color: #d1453b;
   }
-  div.task:hover {
+  .cursor:hover {
     cursor: pointer;
+    background-color:#cec4b4!important;
+    border-radius: 2px;
+    padding: 5px;
   }
 </style>
