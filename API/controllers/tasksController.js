@@ -81,7 +81,7 @@ exports.createTask = async (req, res) => {
 
 exports.getTodayUserTasks = async (req, res) => {
     try {
-        const user = await models.Users.findByPk(req.params.iduser);
+        const user = await models.Users.findByPk(parseInt(req.params.iduser));
 
         if(user === null) {
             return res.status(400).json({
@@ -98,7 +98,7 @@ exports.getTodayUserTasks = async (req, res) => {
     try {
         const tasks = await models.Tasks.findAll({
             where: {
-                iduser : req.params.iduser,
+                iduser : parseInt(req.params.iduser),
                 day : {
                     [Op.eq]: `${res.locals.actualDate.toISOString().slice(0,10)}`
                 },
@@ -141,7 +141,7 @@ exports.getTodayUserTasks = async (req, res) => {
 
 exports.getInboxUserTasks = async (req, res) => {
     try {
-        const user = await models.Users.findByPk(req.params.iduser);
+        const user = await models.Users.findByPk(parseInt(req.params.iduser));
 
         if(user === null) {
             return res.status(400).json({
@@ -158,7 +158,7 @@ exports.getInboxUserTasks = async (req, res) => {
     try {
         const tasks = await models.Tasks.findAll({
             where: {
-                iduser : req.params.iduser,
+                iduser : parseInt(req.params.iduser),
                 day : {
                     [Op.eq]: `${res.locals.actualDate.toISOString().slice(0,10)}`
                 },
@@ -193,7 +193,7 @@ exports.getInboxUserTasks = async (req, res) => {
 
 exports.getUpcomingUserTasks = async (req, res) => {
     try {
-        const user = await models.Users.findByPk(req.params.iduser);
+        const user = await models.Users.findByPk(parseInt(req.params.iduser));
 
         if(user === null) {
             return res.status(400).json({
@@ -210,7 +210,7 @@ exports.getUpcomingUserTasks = async (req, res) => {
     try {
         const tasks = await models.Tasks.findAll({
             where: {
-                iduser : req.params.iduser,
+                iduser : parseInt(req.params.iduser),
                 day : {
                     [Op.gte]: `${res.locals.actualDate.toISOString().slice(0,10)}`
                 },
@@ -250,7 +250,7 @@ exports.getUpcomingUserTasks = async (req, res) => {
 
 exports.getDeletedUserTasks = async (req, res) => {
     try {
-        const user = await models.Users.findByPk(req.params.iduser);
+        const user = await models.Users.findByPk(parseInt(req.params.iduser));
 
         if(user === null) {
             return res.status(400).json({
@@ -267,7 +267,7 @@ exports.getDeletedUserTasks = async (req, res) => {
     try {
         const tasks = await models.Tasks.findAll({
             where: {
-                iduser : req.params.iduser,
+                iduser : parseInt(req.params.iduser),
                 deleted : true
             },
             include: [{
@@ -304,7 +304,7 @@ exports.getDeletedUserTasks = async (req, res) => {
 
 exports.getTasksOfProject = async (req, res) => {
     try {
-        const project = await models.Projects.findByPk(req.params.idproject);
+        const project = await models.Projects.findByPk(parseInt(req.params.idproject));
 
         if(project === null) {
             return res.status(400).json({
@@ -321,7 +321,7 @@ exports.getTasksOfProject = async (req, res) => {
     try {
         const tasks = await models.Tasks.findAll({
             where: {
-                idproject: req.params.idproject,
+                idproject: parseInt(req.params.idproject),
                 deleted: (req.query.deleted) ? req.query.deleted : false
             },
             include: [{
@@ -352,7 +352,7 @@ exports.getTasksOfProject = async (req, res) => {
 
 exports.DeleteTask = async (req, res) => {
     try {
-        const tasks = await models.Tasks.findByPk(req.params.idtask);
+        const tasks = await models.Tasks.findByPk(parseInt(req.params.idtask));
 
         if(tasks === null) {
             return res.status(400).json({
@@ -367,7 +367,7 @@ exports.DeleteTask = async (req, res) => {
     }
 
     try{
-        const result = await models.Tasks.update({ deleted: true }, { where: { idtask: req.params.idtask } });
+        const result = await models.Tasks.update({ deleted: true }, { where: { idtask: parseInt(req.params.idtask) } });
 
         console.log(result);
         res.status(200).json({
@@ -411,7 +411,7 @@ exports.UpdateTask = async (req, res) => {
     }
 
     try{
-        const result = models.Tasks.update(toUpdate, { where: { idtask: req.params.idtask } });
+        const result = models.Tasks.update(toUpdate, { where: { idtask: parseInt(req.params.idtask) } });
 
         console.log(result);
         res.status(200).json({
@@ -427,7 +427,7 @@ exports.UpdateTask = async (req, res) => {
 
 exports.DeleteTasksOfAProject = async (idproject) => {
     try {
-        let tasks = await models.Tasks.findAll({ attributes: ['idtask'], where: { idproject: idproject } });
+        let tasks = await models.Tasks.findAll({ attributes: ['idtask'], where: { idproject: parseInt(idproject) } });
 
         if(tasks.length === null) {
             return ({
@@ -450,7 +450,7 @@ exports.DeleteTasksOfAProject = async (idproject) => {
                 });
             }
 
-            const deleteTasks = await models.Tasks.destroy({ where: { idtask: task.idtask } });
+            const deleteTasks = await models.Tasks.destroy({ where: { idtask: parseInt(task.idtask) } });
 
             console.log(deleteTasks);
         });
@@ -469,7 +469,7 @@ exports.DeleteTasksOfAProject = async (idproject) => {
 
 exports.DeleteTasksOfAUser = async (iduser) => {
     try {
-        let tasks = await models.Tasks.findAll({ attributes: ['idtask'], where: { iduser: iduser } });
+        let tasks = await models.Tasks.findAll({ attributes: ['idtask'], where: { iduser: parseInt(iduser) } });
 
         if(tasks.length === 0) {
             return ({
@@ -492,7 +492,7 @@ exports.DeleteTasksOfAUser = async (iduser) => {
                 });
             }
 
-            const deleteTasks = await models.Tasks.destroy({ where: { idtask: task.idtask } });
+            const deleteTasks = await models.Tasks.destroy({ where: { idtask: parseInt(task.idtask) } });
 
             console.log(deleteTasks);
         });

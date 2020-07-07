@@ -10,7 +10,7 @@ exports.CreateTaskTagged = async (req, res) => {
     }
 
     try {
-        const task = await models.Tasks.findByPk(idtask);
+        const task = await models.Tasks.findByPk(parseInt(idtask));
 
         if(task === null) {
             return res.status(400).json({
@@ -25,7 +25,7 @@ exports.CreateTaskTagged = async (req, res) => {
     }
 
     try {
-        const tag = await models.Tags.findByPk(idtag);
+        const tag = await models.Tags.findByPk(parseInt(idtag));
 
         if(tag === null) {
             return res.status(400).json({
@@ -40,7 +40,7 @@ exports.CreateTaskTagged = async (req, res) => {
     }
 
     try {
-        const result = await models.TasksTagged.findOne({ where: { idtask: idtask, idtag: idtag } });
+        const result = await models.TasksTagged.findOne({ where: { idtask: parseInt(idtask), idtag: parseInt(idtag) } });
 
         if(result !== null) {
             return res.status(400).json({
@@ -56,8 +56,8 @@ exports.CreateTaskTagged = async (req, res) => {
 
     try {
         const result = await models.TasksTagged.create({
-            idtask: idtask, 
-            idtag: idtag
+            idtask: parseInt(idtask), 
+            idtag: parseInt(idtag)
         });
 
         console.log(result);
@@ -79,7 +79,7 @@ exports.CreateTaskTagged = async (req, res) => {
 
 exports.DeleteTaskTagged = async (req, res) => {
     try {
-        const result = await models.TasksTagged.destroy({ where: { idtasktagged: req.params.idtasktagged } });
+        const result = await models.TasksTagged.destroy({ where: { idtasktagged: parseInt(req.params.idtasktagged) } });
 
         console.log(result);
         res.status(200).json({
@@ -95,7 +95,7 @@ exports.DeleteTaskTagged = async (req, res) => {
 
 exports.DeleteTaskTaggedFromTag = async (idtag) => {
     try {
-        const result = await models.TasksTagged.destroy({ where: { idtag: idtag } });
+        const result = await models.TasksTagged.destroy({ where: { idtag: parseInt(idtag) } });
 
         console.log(result);
         return ({
@@ -112,7 +112,7 @@ exports.DeleteTaskTaggedFromTag = async (idtag) => {
 
 exports.DeleteAllTagsOfATask = async (idtask) => {
     try {
-        const result = await models.TasksTagged.destroy({ where: { idtask: idtask } });
+        const result = await models.TasksTagged.destroy({ where: { idtask: parseInt(idtask) } });
 
         console.log(result);
         return ({

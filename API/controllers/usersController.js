@@ -129,7 +129,7 @@ exports.UpdateUser = async (req, res) => {
 
     if(oldPassword && newPassword) {
         try {
-            const user = await models.Users.findByPk(req.params.iduser);
+            const user = await models.Users.findByPk(parseInt(req.params.iduser));
     
             if(user === null) {
                 return res.status(404).json({
@@ -157,7 +157,7 @@ exports.UpdateUser = async (req, res) => {
                         if(hash) {
                             toUpdate.password = hash;
                             console.log(toUpdate);
-                            const result = await models.Users.update(toUpdate, { where: { iduser: req.params.iduser } });
+                            const result = await models.Users.update(toUpdate, { where: { iduser: parseInt(req.params.iduser) } });
         
                             console.log(result);
                             return res.status(200).json({
@@ -195,7 +195,7 @@ exports.UpdateUser = async (req, res) => {
         }
 
         try {
-            const result = await models.Users.update(toUpdate, { where: { iduser: req.params.iduser } });
+            const result = await models.Users.update(toUpdate, { where: { iduser: parseInt(req.params.iduser) } });
 
             console.log(result);
             return res.status(200).json({
@@ -212,7 +212,7 @@ exports.UpdateUser = async (req, res) => {
 
 exports.DeleteUser = async (req, res) => {
     try {
-        const deleteTags = await tagsController.DeleteTagsOfAUser(req.params.iduser);
+        const deleteTags = await tagsController.DeleteTagsOfAUser(parseInt(req.params.iduser));
 
         if(!deleteTags.result) {
             return res.status(500).json({
@@ -220,7 +220,7 @@ exports.DeleteUser = async (req, res) => {
             });
         }
 
-        const deleteTasks = await tasksController.DeleteTasksOfAUser(req.params.iduser);
+        const deleteTasks = await tasksController.DeleteTasksOfAUser(parseInt(req.params.iduser));
 
         if(!deleteTasks.result) {
             return res.status(500).json({
@@ -228,7 +228,7 @@ exports.DeleteUser = async (req, res) => {
             });
         }
 
-        const deleteProjects = await projectsController.DeleteProjectsOfAUser(req.params.iduser);
+        const deleteProjects = await projectsController.DeleteProjectsOfAUser(parseInt(req.params.iduser));
 
         if(!deleteProjects.result) {
             return res.status(500).json({
@@ -236,7 +236,7 @@ exports.DeleteUser = async (req, res) => {
             });
         }
 
-        const result = await models.Users.destroy({ where: { iduser: req.params.iduser }});
+        const result = await models.Users.destroy({ where: { iduser: parseInt(req.params.iduser) }});
 
         if(result === 0) {
             return res.status(400).json({

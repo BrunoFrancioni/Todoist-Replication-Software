@@ -12,7 +12,7 @@ exports.CreateTag = async (req, res) => {
     }
 
     try {
-        const user = await models.Users.findByPk(iduser);
+        const user = await models.Users.findByPk(parseInt(iduser));
 
         if(user === null) {
             return res.status(400).json({
@@ -28,7 +28,7 @@ exports.CreateTag = async (req, res) => {
 
     try {
         const result = await models.Tags.create({
-            iduser: iduser,
+            iduser: parseInt(iduser),
             tagname: tagname
         });
 
@@ -51,7 +51,7 @@ exports.CreateTag = async (req, res) => {
 
 exports.GetTagsOfAUser = async (req, res) => {
     try {
-        const user = await models.Users.findByPk(req.params.iduser);
+        const user = await models.Users.findByPk(parseInt(req.params.iduser));
 
         if(user === null) {
             return res.status(400).json({
@@ -66,7 +66,7 @@ exports.GetTagsOfAUser = async (req, res) => {
     }
 
     try {
-        const tags = await models.Tags.findAll({ where: { iduser: req.params.iduser } });
+        const tags = await models.Tags.findAll({ where: { iduser: parseInt(req.params.iduser) } });
 
         return res.status(200).json({
             tags
@@ -92,7 +92,7 @@ exports.UpdateTag = async (req, res) => {
         const result = await models.Tags.update({
             tagname: tagname
         }, { where: {
-            idtag: req.params.idtag
+            idtag: parseInt(req.params.idtag)
         }});
 
         console.log(result);
@@ -115,7 +115,7 @@ exports.DeleteTag = async (req, res) => {
     }
 
     try {
-        const result = await models.Tags.destroy({ where: { idtag: req.params.idtag } });
+        const result = await models.Tags.destroy({ where: { idtag: parseInt(req.params.idtag) } });
 
         if(result === 0) {
             return res.status(400).json({
@@ -136,7 +136,7 @@ exports.DeleteTag = async (req, res) => {
 
 exports.DeleteTagsOfAUser = async (iduser) => {
     try {
-        let tags = await models.Tags.findAll({ attributes: ['idtag'], where: { iduser: iduser } });
+        let tags = await models.Tags.findAll({ attributes: ['idtag'], where: { iduser: parseInt(iduser) } });
 
         if(tags.length === 0) {
             return ({
@@ -159,7 +159,7 @@ exports.DeleteTagsOfAUser = async (iduser) => {
                 });
             }
 
-            const deleteTags = await models.Tags.destroy({ where: { idtag: tag.idtag } });
+            const deleteTags = await models.Tags.destroy({ where: { idtag: parseInt(tag.idtag) } });
 
             console.log(deleteTags);
         });

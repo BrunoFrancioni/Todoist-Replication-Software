@@ -12,7 +12,7 @@ exports.CreateProject = async (req, res) => {
     }
 
     try {
-        const user = await models.Users.findByPk(iduser);
+        const user = await models.Users.findByPk(parseInt(iduser));
 
         if(user === null) {
             return res.status(400).json({
@@ -28,7 +28,7 @@ exports.CreateProject = async (req, res) => {
 
     try {
         const result = await models.Projects.create({
-            iduser: iduser,
+            iduser: parseInt(iduser),
             title: title,
             archived: false
         });
@@ -54,7 +54,7 @@ exports.CreateProject = async (req, res) => {
 
 exports.GetProjectsOfAUser = async (req, res) => {
     try {
-        const user = await models.Users.findByPk(req.params.iduser);
+        const user = await models.Users.findByPk(parseInt(req.params.iduser));
 
         if(user === null) {
             return res.status(400).json({
@@ -71,7 +71,7 @@ exports.GetProjectsOfAUser = async (req, res) => {
     try {
         const projects = await models.Projects.findAll({
             where: {
-                iduser: req.params.iduser,
+                iduser: parseInt(req.params.iduser),
                 archived: (req.query.archived === 'true') ? true : false
             }
         });
@@ -97,7 +97,7 @@ exports.EditProject = async (req, res) => {
     }
 
     try {
-        const project = await models.Projects.findByPk(req.params.idproject);
+        const project = await models.Projects.findByPk(parseInt(req.params.idproject));
 
         if(project === null) {
             return res.status(400).json({
@@ -117,7 +117,7 @@ exports.EditProject = async (req, res) => {
     if(archived) toUpdate.archived = archived;
 
     try {
-        const result = await models.Projects.update(toUpdate, { where: { idproject: req.params.idproject } });
+        const result = await models.Projects.update(toUpdate, { where: { idproject: parseInt(req.params.idproject) } });
 
         console.log(result);
         res.status(200).json({
@@ -133,7 +133,7 @@ exports.EditProject = async (req, res) => {
 
 exports.DeleteProject = async (req, res) => {
     try {
-        const project = await models.Projects.findByPk(req.params.idproject);
+        const project = await models.Projects.findByPk(parseInt(req.params.idproject));
 
         if(project === null) {
             return res.status(400).json({
@@ -147,7 +147,7 @@ exports.DeleteProject = async (req, res) => {
         });
     }
 
-    const deleteTasks = await tasksController.DeleteTasksOfAProject(req.params.idproject);
+    const deleteTasks = await tasksController.DeleteTasksOfAProject(parseInt(req.params.idproject));
 
     if(!deleteTasks.result) {
         return res.status(500).json({
@@ -156,7 +156,7 @@ exports.DeleteProject = async (req, res) => {
     }
 
     try {
-        const result = await models.Projects.destroy({ where: { idproject: req.params.idproject } });
+        const result = await models.Projects.destroy({ where: { idproject: parseInt(req.params.idproject) } });
 
         console.log(result);
         res.status(200).json({
@@ -172,7 +172,7 @@ exports.DeleteProject = async (req, res) => {
 
 exports.DeleteProjectsOfAUser = async (iduser) => {
     try {
-        let userProjects = await models.Projects.findAll({ attributes: ['idproject'], where: { iduser: iduser } });
+        let userProjects = await models.Projects.findAll({ attributes: ['idproject'], where: { iduser: parseInt(iduser) } });
 
         if(userProjects.length === 0) {
             return ({
@@ -186,7 +186,7 @@ exports.DeleteProjectsOfAUser = async (iduser) => {
         console.log(userProjects);
 
         userProjects.forEach(async (project) => {
-            const deleteProjects = await models.Projects.destroy({ where: { idproject: project.idproject } });
+            const deleteProjects = await models.Projects.destroy({ where: { idproject: project.parseInt(idproject) } });
 
             console.log(deleteProjects);
         });
