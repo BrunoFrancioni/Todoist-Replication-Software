@@ -12,7 +12,7 @@ class projectServices {
         }
     }
 
-    GetProjects = async (iduser, archived) => {
+    GetProjects = async (iduser, archived = false) => {
         try {
             const result = await http.get(`/projects/${iduser}?archived=${archived}`);
 
