@@ -4,7 +4,10 @@
             <div class="form-inline">
                 <a class="navbar-brand" href="#"><i class="fas fa-bars text-white"></i></a>
                 <div @click="setHomePage">
-                    <router-link to="/" class="nav-link"><i class="fas fa-home text-white"></i></router-link>
+                    <router-link 
+                        to="/" 
+                        class="nav-link"
+                    ><i v-b-tooltip.hover title="Home" class="fas fa-home text-white"></i></router-link>
                 </div>
                 <form class="form-inline my-2 my-lg-0 input-group-sm">
                     <input class="form-control mr-sm-2" type="text" placeholder="Find">
@@ -14,7 +17,11 @@
 
             <ul class="nav form-inline ml-auto">
                 <li class="nav-item add-task">
-                    <a class="nav-link" @click="showCreateTaskModal"><i class="fas fa-plus text-white add-task-button"></i></a>
+                    <a 
+                        class="nav-link" 
+                        @click="showCreateTaskModal" 
+                        v-b-tooltip.hover title="Create a task"
+                    ><i class="fas fa-plus text-white add-task-button"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
