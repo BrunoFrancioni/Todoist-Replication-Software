@@ -9,7 +9,7 @@
       <div class="row">
         <sidebar ref="sidebar" />
         <transition>
-          <router-view />
+          <router-view ref="actualView" />
         </transition>
       </div>
     </b-container>
@@ -109,8 +109,6 @@
 <script>
 import Upbar from './components/navbars/Upbar'
 import Sidebar from './components/navbars/Sidebar'
-import projectServices from './_services/project-services'
-import tagsServices from './_services/tags-services'
 import tasksServices from './_services/tasks-services'
 import tasksTaggedServices from './_services/tasks-tagged-services'
 
@@ -148,31 +146,23 @@ export default {
       })
     }
   },
-  created() {
-    this.getProjects();
-    this.getTags();
-  },
   methods: {
     setToday() {
       this.$refs.sidebar.setActiveToday();
     },
     async getProjects() {
-      const result = await projectServices.GetProjects(this.userInfo.iduser);
-
-      if(result.status === 200) {
-        (result.data.projects).forEach(project => {
-          this.projectOptions.push({text: project.title, value: project.idproject});
-        });
-      }
+      this.projectOptions = [{text: 'Inbox', value: null}];
+      
+      (this.$refs.sidebar.projects).forEach(project => {
+        this.projectOptions.push({text: project.title, value: project.idproject});
+      });
     },
     async getTags() {
-      const result = await tagsServices.GetTags(this.userInfo.iduser);
-
-      if(result.status === 200) {
-        (result.data.tags).forEach(tag => {
-          this.tagsOptions.push({text: tag.tagname, value: tag.idtag});
-        });
-      }
+      this.tagsOptions= [];
+      
+      (this.$refs.sidebar.labels).forEach(tag => {
+        this.tagsOptions.push({text: tag.tagname, value: tag.idtag});
+      });
     },
     showModal(){
       this.showCreateTaskModal = true;
@@ -186,6 +176,7 @@ export default {
         day: new Date(),
         time: null
       }
+      this.tagsChecked = [];
     },
     async submitTask(evt) {
       evt.preventDefault();
@@ -213,7 +204,7 @@ export default {
             idtask: result.data.createdTask.idtask,
             idtag: tag
           }
-          console.log(data);
+          
           const res = await tasksTaggedServices.CreateTaskTagged(data);
 
           if(res.status !== 201) {
@@ -224,6 +215,10 @@ export default {
             });
           }
         });
+
+        this.resetModal();
+        this.$refs.actualView.getTasks();
+        this.showCreateTaskModal = false;
       }
     }
   }
