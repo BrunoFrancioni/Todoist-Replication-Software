@@ -4,14 +4,17 @@
       v-for="(task, index) in tasks" 
       :key="index" 
       v-bind:task="task" 
-      @showModal="displayModal"
+      @showInfoModal="displayInfoModal"
+      @showEditModal="displayEditModal"
     />
 
     <b-modal 
       size="lg"
-      v-model="modalShow" 
+      v-model="modalShowInfo" 
       title="See details"
       @hidden="resetModal"
+      ok-only
+      ok-title="Close"
     >
       <div class="ml-3">
         <b-row  align-h="start">
@@ -56,19 +59,84 @@
           {{ modalTask.content }}
         </b-row>
       </div>
-      
-      <b-button variant="light" v-b-modal.modal-multi><i class="fas fa-pencil-alt"></i></b-button>
 
-      <b-modal id="modal-multi" title="Second Modal" ok-only>
-        <p class="my-2">Second Modal</p>
-        
-      </b-modal>
+    </b-modal>
+
+    <b-modal 
+      size="lg"
+      v-model="modalShowEdit" 
+      title="Edit task"
+      @hidden="resetModal"
+    >
+      <div>
+        <b-form @submit="saveTask" @reset="resetModal">
+          <b-form-group
+            id="input-group-1"
+            label="Task title:"
+            label-for="title"
+          >
+            <b-form-input
+              id="title"
+              v-model="modalTask.title"
+              type="text"
+              required
+              placeholder="Enter task title"
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group 
+            id="input-group-2" 
+            label="Content:" 
+            label-for="content"
+          >
+            <b-form-textarea
+              id="content"
+              v-model="modalTask.content"
+              placeholder="Enter the content"
+            ></b-form-textarea>
+          </b-form-group>
+
+          <b-form-group 
+            id="input-group-3" 
+            label="Project:" 
+            label-for="project"
+          >
+            <b-form-select
+              id="project"
+              v-model="modalTask.idproject"
+              :options="this.$parent.$parent.projectOptions"
+            ></b-form-select>
+          </b-form-group>
+
+          <b-form-group id="input-group-4" label="Tags:">
+            <b-form-checkbox-group v-model="modalTask.Tags" id="tags">
+              <b-form-checkbox 
+                v-for="(tag, index) in this.$parent.$parent.tagsOptions" 
+                :key="index"
+                :value="tag.value"
+                :checked="(tag.value in modalTask.Tags) ? true : false"
+              >{{ tag.text }}</b-form-checkbox>
+            </b-form-checkbox-group>
+          </b-form-group>
+
+          <b-form-group>
+            <b-button type="reset" variant="danger" class="mr-2">Reset</b-button>
+            <b-button type="submit" variant="primary">Save</b-button>
+          </b-form-group>
+          
+        </b-form>
+      </div>
+
+      <template v-slot:modal-footer>
+        <b-button variant="" @click="modalShowEdit = false">Close</b-button>
+      </template>
     </b-modal>
   </div>
 </template>
 
 <script>
 import Task from './Task.vue'
+//import tasksServices from '../../_services/tasks-services'
 
 export default {
   name: 'Tasks',
@@ -78,7 +146,8 @@ export default {
   props: ['tasks'],
   data() {
     return {
-      modalShow: false,
+      modalShowInfo: false,
+      modalShowEdit: false,
       modalTask: {
         idtask: null,
         iduser: null,
@@ -108,9 +177,25 @@ export default {
     }
   },
   methods: {
-    displayModal(task) {
-      this.modalShow = true;
+    displayInfoModal(task) {
+      this.modalShowInfo = true;
       this.modalTask = task;
+    },
+    displayEditModal(task) {
+      this.modalShowEdit = true;
+
+      this.modalTask.idtask = task.idtask;
+      this.modalTask.iduser = task.iduser;
+      this.modalTask.idproject = task.idproject;
+      this.modalTask.title = task.title;
+      this.modalTask.content = task.content;
+      this.modalTask.done = task.done;
+      this.modalTask.day = task.day;
+      this.modalTask.deleted = task.deleted;
+      
+      (task.Tags).forEach(tag => {
+        this.modalTask.Tags.push({text: tag.tagname, value: tag.idtag});
+      });
     },
     resetModal() {
       this.modalTask = {
@@ -128,6 +213,11 @@ export default {
     },
     getMonth(month) {
       return this.months[month];
+    },
+    async saveTask(evt) {
+      evt.preventDefault();
+
+
     }
   }
 }
