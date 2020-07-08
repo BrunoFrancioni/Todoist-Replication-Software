@@ -19,6 +19,7 @@
       v-model="showCreateTaskModal" 
       title="Create Task"
       @hidden="resetModal"
+      id="createTaskModal"
     >
       <div>
         <b-form @submit="submitTask" @reset="resetModal" v-if="showCreateTaskModal">
@@ -44,7 +45,6 @@
             <b-form-textarea
               id="content"
               v-model="createTask.content"
-              required
               placeholder="Enter the content"
             ></b-form-textarea>
           </b-form-group>
@@ -58,7 +58,6 @@
               id="project"
               v-model="createTask.idproject"
               :options="projectOptions"
-              required
             ></b-form-select>
           </b-form-group>
 
@@ -80,6 +79,7 @@
               v-model="createTask.day" 
               :min="createTask.day" 
               v-once
+              required
             >
 
             </b-form-datepicker>
@@ -90,12 +90,17 @@
 
           </b-form-timepicker>
           </b-form-group>
+
+          <b-form-group>
+            <b-button type="reset" variant="danger" class="mr-2">Reset</b-button>
+            <b-button type="submit" variant="primary">Create task</b-button>
+          </b-form-group>
+          
         </b-form>
       </div>
 
       <template v-slot:modal-footer>
-        <b-button type="submit" variant="primary">Create task</b-button>
-        <b-button type="reset" variant="danger" @click="resetModal">Reset</b-button>
+        <b-button variant="" @click="$bvModal.hide('createTaskModal')">Close</b-button>
       </template>
     </b-modal>
   </div>
@@ -107,6 +112,7 @@ import Sidebar from './components/navbars/Sidebar'
 import projectServices from './_services/project-services'
 import tagsServices from './_services/tags-services'
 import tasksServices from './_services/tasks-services'
+import tasksTaggedServices from './_services/tasks-tagged-services'
 
 export default {
   name: 'App',
@@ -142,6 +148,10 @@ export default {
       })
     }
   },
+  created() {
+    this.getProjects();
+    this.getTags();
+  },
   methods: {
     setToday() {
       this.$refs.sidebar.setActiveToday();
@@ -165,9 +175,7 @@ export default {
       }
     },
     showModal(){
-      this.showCreateTaskModal = true
-      this.getProjects();
-      this.getTags();
+      this.showCreateTaskModal = true;
     },
     resetModal() {
       this.createTask = {
@@ -179,7 +187,9 @@ export default {
         time: null
       }
     },
-    async submitTask() {
+    async submitTask(evt) {
+      evt.preventDefault();
+
       this.createTask.iduser = this.userInfo.iduser;
 
       if(this.createTask.time == '00:00:00') this.createTask.time = null;
@@ -187,9 +197,32 @@ export default {
       const result = await tasksServices.CreateTask(this.createTask);
 
       if(result.status !== 201) {
+        console.log(result);
         this.Toast.fire({
           icon: 'error',
           title: 'An error has occurred'
+        });
+      } else {
+        this.Toast.fire({
+          icon: 'success',
+          title: 'Task created succesfully'
+        });
+
+        (this.tagsChecked).forEach(async (tag) => {
+          const data = {
+            idtask: result.data.createdTask.idtask,
+            idtag: tag
+          }
+          console.log(data);
+          const res = await tasksTaggedServices.CreateTaskTagged(data);
+
+          if(res.status !== 201) {
+            console.log(res);
+            this.Toast.fire({
+              icon: 'error',
+              title: 'An error has occurred'
+            });
+          }
         });
       }
     }
