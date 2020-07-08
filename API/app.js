@@ -43,6 +43,6 @@ app.use('/users', usersRoutes());
 app.use('/tasks', tasksRoutes());
 app.use('/projects', projectRoutes());
 app.use('/tags', tagsRoutes());
-app.use('/tasksTagged', tasksTaggedRoutes());
+app.use('/taskstagged', tasksTaggedRoutes());
 
 module.exports = app;
