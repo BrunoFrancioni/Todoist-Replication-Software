@@ -41,7 +41,10 @@
         </li>
 
         <li>
-          <b-link class="text-secondary"><i class="fas fa-plus"></i> <span>Add project</span></b-link>
+          <b-link 
+            class="text-secondary" 
+            @click="showCreateProjectModal = true"
+          ><i class="fas fa-plus"></i> <span>Add project</span></b-link>
         </li>
       </div>
 
@@ -60,10 +63,83 @@
         </li>
 
         <li>
-          <b-link class="text-secondary"><i class="fas fa-plus"></i> <span>Add label</span></b-link>
+          <b-link 
+            class="text-secondary"
+            @click="showCreateTagModal = true"
+          ><i class="fas fa-plus"></i> <span>Add label</span></b-link>
         </li>
       </div>
     </ul>
+
+    <b-modal
+      v-model="showCreateProjectModal"
+      size="lg"
+      title="Create Project"
+      @hidden="resetProjectModal"
+    >
+      <div>
+        <b-form @submit="submitProject" @reset="resetProjectModal">
+          <b-form-group
+            id="input-group-1"
+            label="Project title:"
+            label-for="title"
+          >
+            <b-form-input
+              id="title"
+              v-model="createProject.title"
+              type="text"
+              required
+              placeholder="Enter project title"
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group>
+            <b-button type="reset" variant="danger" class="mr-2">Reset</b-button>
+            <b-button type="submit" variant="primary">Create project</b-button>
+          </b-form-group>
+          
+        </b-form>
+      </div>
+
+      <template v-slot:modal-footer>
+        <b-button variant="" @click="showCreateProjectModal = false">Close</b-button>
+      </template>
+    </b-modal>
+
+    <b-modal
+      v-model="showCreateTagModal"
+      size="lg"
+      title="Create Label"
+      @hidden="resetTagModal"
+    >
+      <div>
+        <b-form @submit="submitTag" @reset="resetTagModal">
+          <b-form-group
+            id="input-group-1"
+            label="Label title:"
+            label-for="title"
+          >
+            <b-form-input
+              id="title"
+              v-model="createTag.tagname"
+              type="text"
+              required
+              placeholder="Enter label name"
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group>
+            <b-button type="reset" variant="danger" class="mr-2">Reset</b-button>
+            <b-button type="submit" variant="primary">Create label</b-button>
+          </b-form-group>
+          
+        </b-form>
+      </div>
+
+      <template v-slot:modal-footer>
+        <b-button variant="" @click="showCreateTagModal = false">Close</b-button>
+      </template>
+    </b-modal>
   </b-col>
 </template>
 
@@ -79,7 +155,15 @@ export default {
       todayActive: false,
       upcomingActive: false,
       projects: [],
-      labels: []
+      labels: [],
+      showCreateProjectModal: false,
+      createProject: {
+        title: ''
+      },
+      showCreateTagModal: false,
+      createTag: {
+        tagname: ''
+      }
     }
   },
   created() {
@@ -108,13 +192,77 @@ export default {
       console.log(result);
       if(result.status === 200) {
         this.projects = result.data.projects;
+        this.$parent.getProjects();
       }
     },
     async getLabels() {
       const result = await tagsServices.GetTags(this.$parent.userInfo.iduser);
       console.log(result);
 
-      if(result.status === 200) this.labels = result.data.tags;
+      if(result.status === 200) {
+        this.labels = result.data.tags;
+        this.$parent.getTags();
+      }
+    },
+    resetProjectModal() {
+      this.createProject = {
+        title: ''
+      }
+    },
+    resetTagModal() {
+      this.createTag = {
+        tagname: ''
+      }
+    },
+    async submitProject(evt) {
+      evt.preventDefault();
+      this.createProject.iduser = this.$parent.userInfo.iduser;
+
+      const result = await projectServices.CreateProject(this.createProject);
+
+      if(result.status !== 201) {
+        console.log(result);
+
+        this.$parent.Toast.fire({
+          icon: 'error',
+          title: 'An error has occurred'
+        });
+      } else {
+        this.$parent.Toast.fire({
+          icon: 'success',
+          title: 'Project created succesfully'
+        });
+
+        this.getProjects();
+        this.showCreateProjectModal = false;
+        this.resetProjectModal();
+        this.$parent.getProjects()  ;
+      }
+    },
+    async submitTag(evt) {
+      evt.preventDefault();
+      this.createTag.iduser = this.$parent.userInfo.iduser;
+
+      const result = await tagsServices.CreateTag(this.createTag);
+
+      if(result.status !== 201) {
+        console.log(result);
+
+        this.$parent.Toast.fire({
+          icon: 'error',
+          title: 'An error has occurred'
+        });
+      } else {
+        this.$parent.Toast.fire({
+          icon: 'success',
+          title: 'Label created succesfully'
+        });
+
+        this.getLabels();
+        this.showCreateTagModal = false;
+        this.resetTagModal();
+        this.$parent.getTags();
+      }
     }
   }
 }
