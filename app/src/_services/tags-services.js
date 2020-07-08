@@ -1,9 +1,10 @@
 import http from './http-common';
+import qs from 'qs';
 
 class tagsServices {
     CreateTag = async (data) => {
         try {
-            const result = await http.post('/tags', data);
+            const result = await http.post('/tags', qs.stringify(data));
 
             return result;
         } catch(error) {
@@ -25,7 +26,7 @@ class tagsServices {
 
     EditTag = async (idtag, data) => {
         try {
-            const result = await http.put(`/tags/${idtag}`, data);
+            const result = await http.put(`/tags/${idtag}`, qs.stringify(data));
 
             return result;
         } catch(error) {

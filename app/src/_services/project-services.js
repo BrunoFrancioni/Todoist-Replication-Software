@@ -1,9 +1,10 @@
 import http from './http-common';
+import qs from 'qs';
 
 class projectServices {
     CreateProject = async (data) => {
         try {
-            const result = await http.post('/projects', data);
+            const result = await http.post('/projects', qs.stringify(data));
 
             return result;
         } catch(error) {
@@ -25,7 +26,7 @@ class projectServices {
 
     EditProject = async (idproject, data) => {
         try {
-            const result = await http.put(`/projects/${idproject}`, data);
+            const result = await http.put(`/projects/${idproject}`, qs.stringify(data));
 
             return result;
         } catch(error) {

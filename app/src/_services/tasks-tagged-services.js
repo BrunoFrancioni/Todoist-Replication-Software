@@ -1,9 +1,10 @@
 import http from './http-common';
+import qs from 'qs';
 
 class tasksTaggedServices {
     CreateTaskTagged = async (data) => {
         try {
-            const result = await http.post("/taskstagged", data);
+            const result = await http.post("/taskstagged", qs.stringify(data));
 
             return result;
         } catch(error) {

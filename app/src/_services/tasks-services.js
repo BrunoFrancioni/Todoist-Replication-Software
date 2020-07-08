@@ -4,7 +4,7 @@ import qs from 'qs';
 class tasksServices {
     CreateTask = async (data) => {
         try {
-            const result = await http.post("/tasks", data);
+            const result = await http.post("/tasks", qs.stringify(data));
 
             return result;
         } catch(error) {
@@ -46,7 +46,7 @@ class tasksServices {
         }
     }
 
-    GetProjectTasks = async (idproject, deleted) => {
+    GetProjectTasks = async (idproject, deleted = false) => {
         try {
             const result = await http.get(`/tasks/projects/${idproject}?deleted=${deleted}`);
 
