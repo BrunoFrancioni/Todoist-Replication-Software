@@ -3,14 +3,6 @@
       <b-row align-h="between">
         <b-col cols="6" md="4">
           <b-row align-h="start">
-            <!--  
-            <b-form-checkbox 
-              class="mb-2 mr-sm-2 mb-sm-0" 
-              v-model="task.done"
-              @click="changeDoneStatus"
-            ></b-form-checkbox>
-             -->
-            
             <input 
               type="checkbox" 
               class="control-input mt-1 mr-1"
@@ -33,6 +25,11 @@
               class="fas fa-pencil-alt cursor" 
               @click="showEditModal" 
               v-b-tooltip.hover title="Edit task"
+            ></i>
+            <i 
+              class="fas fa-trash-alt ml-3 cursor"
+              @click="deleteTask"
+              v-b-tooltip.hover title="Delete task"
             ></i>
           </b-row>
         </b-col>
@@ -97,28 +94,52 @@ export default {
     },
     async changeDoneStatus() {
       const data = {
-        'done': `${this.task.done}`
+        'done': `${(this.task.done) ? false : true}`
       };
       console.log(data);
       
       const result = await tasksServices.EditTask(this.task.idtask, data);
-      console.log(result);
+      
       if(result.status !== 200) {
-        console.log('Ocurrió un error');
-        console.log(this.task.done);
+        this.$parent.$parent.$parent.Toast.fire({
+          icon: 'error',
+          title: 'An error has occurred'
+        });
+
         if(this.task.done === false) {
           this.task.done = true;
         } else {
           this.task.done = false;
         }
+      } else {
+        this.$parent.$parent.$parent.Toast.fire({
+          icon: 'success',
+          title: 'Task edited succesfully'
+        });
       }
-      console.log(this.task.done);
     },
     showInfoModal() {
       this.$emit('showInfoModal', this.task);
     },
     showEditModal() {
       this.$emit('showEditModal', this.task);
+    },
+    async deleteTask() {
+      const result = await tasksServices.DeleteTask(this.task.idtask);
+
+      if(result.status !== 200) {
+        this.$parent.$parent.$parent.Toast.fire({
+          icon: 'error',
+          title: 'An error has occurred'
+        });
+      } else {
+        this.$parent.$parent.$parent.Toast.fire({
+          icon: 'success',
+          title: 'Task deleted succesfully'
+        });
+
+        this.$parent.$parent.getTasks();
+      }
     }
   }
 }
