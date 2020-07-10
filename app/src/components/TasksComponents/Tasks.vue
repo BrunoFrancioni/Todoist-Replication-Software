@@ -112,6 +112,25 @@
             </b-form-checkbox-group>
           </b-form-group>
 
+          <b-form-group 
+            id="input-group-5" 
+            label="Date:"
+          >
+            <b-form-datepicker 
+              v-model="modalEditTask.day" 
+              :min="today" 
+              v-once
+              required
+            >
+            </b-form-datepicker>
+          </b-form-group>
+
+          <b-form-group id="input-group-6" label="Time:">
+            <b-form-timepicker v-model="modalEditTask.time">
+
+          </b-form-timepicker>
+          </b-form-group>
+
           <b-form-group>
             <b-button type="reset" variant="danger" class="mr-2">Reset</b-button>
             <b-button type="submit" variant="primary">Save</b-button>
@@ -161,6 +180,7 @@ export default {
         Tags: [],
         Project: { title: null, idproject: null }
       },
+      today: (new Date()).toISOString().slice(0, 10),
       months: {
         '01': 'Jan',
         '02': 'Feb',
@@ -204,10 +224,11 @@ export default {
       this.modalEditTask.title = task.title;
       this.modalEditTask.content = task.content;
       this.modalEditTask.day = task.day;
+      this.modalEditTask.time = task.time;
       this.modalEditTask.Project = task.Project;
       
       (task.Tags).forEach(tag => {
-        this.modalEditTask.Tags.push({text: tag.tagname, value: tag.idtag});
+        this.modalEditTask.Tags.push(tag.idtag);
       });
     },
     resetShowModal() {
