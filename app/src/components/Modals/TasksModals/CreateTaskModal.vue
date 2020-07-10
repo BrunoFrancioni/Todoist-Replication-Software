@@ -159,9 +159,8 @@ export default {
                     }
                 });
 
-                this.resetModal();
+                this.closeModal();
                 this.$parent.$refs.actualView.getTasks();
-                this.$parent.showCreateTaskModal = false;
 
                 this.$parent.Toast.fire({
                     icon: 'success',
