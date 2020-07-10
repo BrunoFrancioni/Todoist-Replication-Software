@@ -142,31 +142,31 @@ export default {
                     title: 'An error has occurred'
                 });
             } else {
-                this.$parent.Toast.fire({
-                    icon: 'success',
-                    title: 'Task created succesfully'
-                });
-
                 (this.tagsChecked).forEach(async (tag) => {
-                const data = {
-                    idtask: result.data.createdTask.idtask,
-                    idtag: tag
-                }
-                
-                const res = await tasksTaggedServices.CreateTaskTagged(data);
+                    const data = {
+                        idtask: result.data.createdTask.idtask,
+                        idtag: tag
+                    }
+                    
+                    const res = await tasksTaggedServices.CreateTaskTagged(data);
 
-                if(res.status !== 201) {
-                    console.log(res);
-                    this.Toast.fire({
-                        icon: 'error',
-                        title: 'An error has occurred'
-                    });
-                }
+                    if(res.status !== 201) {
+                        console.log(res);
+                        this.Toast.fire({
+                            icon: 'error',
+                            title: 'An error has occurred'
+                        });
+                    }
                 });
 
                 this.resetModal();
                 this.$parent.$refs.actualView.getTasks();
                 this.$parent.showCreateTaskModal = false;
+
+                this.$parent.Toast.fire({
+                    icon: 'success',
+                    title: 'Task created succesfully'
+                });
             }
         }
     }
