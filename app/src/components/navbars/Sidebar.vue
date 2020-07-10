@@ -26,7 +26,7 @@
         >Upcoming</router-link>
       </li>
 
-      <li class="nav-item form-inline mb-2">
+      <li class="nav-item form-inline mb-1">
         <i class="fas fa-sort-amount-down"></i>
         <span class="nav-link text-dark font-weight-bold">Projects</span>
       </li>
@@ -37,7 +37,12 @@
         </li>
 
         <li v-else v-for="(project, index) in projects" :key="index">
-          <p>{{ project.title }}</p>
+          <router-link
+            :to="{ name: 'Project', params: { idproject: project.idproject, title: project.title } }"
+            class="nav-link text-dark"
+            @click="resetTasks"
+            replace
+          >{{ project.title }}</router-link>
         </li>
 
         <li>
@@ -263,6 +268,9 @@ export default {
         this.resetTagModal();
         this.$parent.getTags();
       }
+    },
+    resetTasks() {
+      this.$parent.resetTasks();
     }
   }
 }
