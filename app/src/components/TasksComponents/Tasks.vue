@@ -132,7 +132,6 @@
           </b-form-group>
 
           <b-form-group>
-            <b-button type="reset" variant="danger" class="mr-2">Reset</b-button>
             <b-button type="submit" variant="primary">Save</b-button>
           </b-form-group>
           
