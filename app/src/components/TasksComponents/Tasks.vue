@@ -170,7 +170,6 @@ export default {
         Project: { title: null, idproject: null }
       },
       modalEditTask: {
-        iduser: null,
         idtask: null,
         idproject: null,
         title: null,
@@ -180,6 +179,7 @@ export default {
         Tags: [],
         Project: { title: null, idproject: null }
       },
+      oldTags: [],
       today: (new Date()).toISOString().slice(0, 10),
       months: {
         '01': 'Jan',
@@ -219,7 +219,6 @@ export default {
       this.modalShowEdit = true;
 
       this.modalEditTask.idtask = task.idtask;
-      this.modalEditTask.iduser = task.iduser;
       this.modalEditTask.idproject = task.idproject;
       this.modalEditTask.title = task.title;
       this.modalEditTask.content = task.content;
@@ -229,6 +228,7 @@ export default {
       
       (task.Tags).forEach(tag => {
         this.modalEditTask.Tags.push(tag.idtag);
+        this.oldTags.push(tag.idtag);
       });
     },
     resetShowModal() {
@@ -244,7 +244,6 @@ export default {
     },
     resetEditModal() {
       this.modalEditTask = {
-        iduser: null,
         idtask: null,
         idproject: null,
         title: null,
@@ -254,6 +253,8 @@ export default {
         Tags: [],
         Project: { title: null, idproject: null }
       }
+
+      this.oldTags = [];
     },
     getMonth(month) {
       return this.months[month];
