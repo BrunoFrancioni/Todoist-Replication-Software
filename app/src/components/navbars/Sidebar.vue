@@ -64,7 +64,24 @@
         </li>
 
         <li v-else v-for="(label, index) in labels" :key="index">
-          <p>{{ label.tagname }}</p>
+          <b-row>
+            <b-col>
+              <p>{{ label.tagname }}</p>
+            </b-col>
+            
+            <b-col align-v="end">
+              <i 
+              class="fas fa-pencil-alt cursor" 
+              @click="showEditTag(label)" 
+              v-b-tooltip.hover title="Edit tag"
+              ></i>
+              <i 
+                class="fas fa-trash-alt ml-3 cursor"
+                @click="deleteTag(label.idtag)"
+                v-b-tooltip.hover title="Delete label"
+              ></i>
+            </b-col>
+          </b-row>
         </li>
 
         <li>
@@ -145,6 +162,40 @@
         <b-button variant="" @click="showCreateTagModal = false">Close</b-button>
       </template>
     </b-modal>
+
+    <b-modal
+      v-model="showEditTagModal"
+      size="lg"
+      title="Edit Label"
+      @hidden="resetEditTagModal"
+    >
+      <div>
+        <b-form @submit="submitTagEdited" @reset="resetEditTagModal">
+          <b-form-group
+            id="input-group-1"
+            label="Label title:"
+            label-for="title"
+          >
+            <b-form-input
+              id="title"
+              v-model="editTag.tagname"
+              type="text"
+              required
+              placeholder="Enter label name"
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group>
+            <b-button type="submit" variant="primary">Save label</b-button>
+          </b-form-group>
+          
+        </b-form>
+      </div>
+
+      <template v-slot:modal-footer>
+        <b-button variant="" @click="showEditTagModal = false">Close</b-button>
+      </template>
+    </b-modal>
   </b-col>
 </template>
 
@@ -168,6 +219,11 @@ export default {
       showCreateTagModal: false,
       createTag: {
         tagname: ''
+      },
+      showEditTagModal: false,
+      editTag: {
+        idtag: null,
+        tagname: null
       }
     }
   },
@@ -271,6 +327,64 @@ export default {
     },
     resetTasks() {
       this.$parent.resetTasks();
+    },
+    resetEditTagModal() {
+      this.editTag = {
+        idtag: null,
+        tagname: null
+      }
+
+      this.showEditTagModal = false;
+    },
+    showEditTag(label) {
+      this.editTag.idtag = label.idtag;
+      this.editTag.tagname = label.tagname;
+
+      this.showEditTagModal = true;
+    },
+    async submitTagEdited(evt) {
+      evt.preventDefault();
+
+      const result = await tagsServices.EditTag(this.editTag.idtag, { tagname: this.editTag.tagname });
+
+      if(result.status !== 200) {
+        this.$parent.Toast.fire({
+          icon: 'error',
+          title: 'An error has occurred'
+        });
+
+        this.resetEditTagModal();
+      } else {
+        this.$parent.Toast.fire({
+          icon: 'success',
+          title: 'Label edited succesfully'
+        });
+
+        this.getLabels();
+        this.$parent.getTags();
+        this.$parent.resetTasks();
+
+        this.resetEditTagModal();
+      }
+    },
+    async deleteTag(idtag) {
+      const result = await tagsServices.DeleteTag(idtag);
+
+      if(result.status !== 200) {
+        this.$parent.Toast.fire({
+          icon: 'error',
+          title: 'An error has occurred'
+        });
+      } else {
+        this.$parent.Toast.fire({
+          icon: 'success',
+          title: 'Label deleted succesfully'
+        });
+
+        this.getLabels();
+        this.$parent.resetTasks();
+        this.$parent.getTags();
+      }
     }
   }
 }
