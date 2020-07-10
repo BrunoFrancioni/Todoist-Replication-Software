@@ -12,51 +12,44 @@
       size="lg"
       v-model="modalShowInfo" 
       title="See details"
-      @hidden="resetModal"
+      @hidden="resetShowModal"
       ok-only
       ok-title="Close"
     >
       <div class="ml-3">
         <b-row  align-h="start">
-          <input 
-            type="checkbox" 
-            class="mt-1 mr-sm-2 mb-sm-0" 
-            v-model="modalTask.done" 
-            
-          >
-        
-          <p>{{ modalTask.title }}</p>
+          <p>{{ modalInfoTask.title }}</p>
         </b-row>
 
         <b-row align-h="between">
           <b-col cols="6" md="4">
             <b-row align-h="start">
               <i class="far fa-calendar-alt mr-1 color-red"></i>
-              <p class="mr-2 color-red">{{ getMonth(modalTask.day.slice(5,7))}}  {{ modalTask.day.slice(8) }}</p>
-              <p v-if="modalTask.time !== null" class="color-red">{{ modalTask.time.slice(0,5) }} hrs.</p>
+              <p class="mr-2 color-red">{{ getMonth(modalInfoTask.day.slice(5,7))}}  {{ modalInfoTask.day.slice(8) }}</p>
+              <p v-if="modalInfoTask.time !== null" class="color-red">{{ modalInfoTask.time.slice(0,5) }} hrs.</p>
             </b-row>
           </b-col>
             
           <b-col cols="6" md="4">
             <b-row align-h="end" class="pr-3">
-              <p v-if="modalTask.idproject === null" class="text-secondary">Inbox</p>
-              <p v-else class="text-secondary">{{ modalTask.Project.title }}</p>
+              <p v-if="modalInfoTask.idproject === null" class="text-secondary">Inbox</p>
+              <p v-else class="text-secondary">{{ modalInfoTask.Project.title }}</p>
             </b-row>
           </b-col>
         </b-row>
 
-        <b-row v-if="modalTask.Tags.length !== 0">
+        <b-row v-if="modalInfoTask.Tags.length !== 0">
           <span 
             class="badge badge-warning mr-2"
-            v-for="(tag, index) in modalTask.Tags"
+            v-for="(tag, index) in modalInfoTask.Tags"
             :key="index"
           >{{ tag.tagname }}</span>
         </b-row>
 
         <b-row 
           class="mt-3 mb-3"
-          v-if="modalTask.content !== null">
-          {{ modalTask.content }}
+          v-if="modalInfoTask.content !== null">
+          {{ modalInfoTask.content }}
         </b-row>
       </div>
 
@@ -66,10 +59,10 @@
       size="lg"
       v-model="modalShowEdit" 
       title="Edit task"
-      @hidden="resetModal"
+      @hidden="resetEditModal"
     >
       <div>
-        <b-form @submit="saveTask" @reset="resetModal">
+        <b-form @submit="saveTask" @reset="resetEditModal" v-if="modalShowEdit">
           <b-form-group
             id="input-group-1"
             label="Task title:"
@@ -77,7 +70,7 @@
           >
             <b-form-input
               id="title"
-              v-model="modalTask.title"
+              v-model="modalEditTask.title"
               type="text"
               required
               placeholder="Enter task title"
@@ -91,7 +84,7 @@
           >
             <b-form-textarea
               id="content"
-              v-model="modalTask.content"
+              v-model="modalEditTask.content"
               placeholder="Enter the content"
             ></b-form-textarea>
           </b-form-group>
@@ -103,18 +96,18 @@
           >
             <b-form-select
               id="project"
-              v-model="modalTask.idproject"
+              v-model="modalEditTask.idproject"
               :options="this.$parent.$parent.projectOptions"
             ></b-form-select>
           </b-form-group>
 
           <b-form-group id="input-group-4" label="Tags:">
-            <b-form-checkbox-group v-model="modalTask.Tags" id="tags">
+            <b-form-checkbox-group v-model="modalEditTask.Tags" id="tags">
               <b-form-checkbox 
                 v-for="(tag, index) in this.$parent.$parent.tagsOptions" 
                 :key="index"
                 :value="tag.value"
-                :checked="(tag.value in modalTask.Tags) ? true : false"
+                :checked="(tag.value in modalEditTask.Tags) ? true : false"
               >{{ tag.text }}</b-form-checkbox>
             </b-form-checkbox-group>
           </b-form-group>
@@ -148,17 +141,25 @@ export default {
     return {
       modalShowInfo: false,
       modalShowEdit: false,
-      modalTask: {
-        idtask: null,
-        iduser: null,
+      modalInfoTask: {
         idproject: null,
         title: null,
         content: null,
-        done: null,
         day: (new Date()).toUTCString().slice(0, 11),
         time: null,
-        deleted: null,
-        Tags: []
+        Tags: [],
+        Project: { title: null, idproject: null }
+      },
+      modalEditTask: {
+        iduser: null,
+        idtask: null,
+        idproject: null,
+        title: null,
+        content: null,
+        day: null,
+        time: null,
+        Tags: [],
+        Project: { title: null, idproject: null }
       },
       months: {
         '01': 'Jan',
@@ -178,37 +179,59 @@ export default {
   },
   methods: {
     displayInfoModal(task) {
+      this.modalShowEdit = false;
+      this.resetEditModal();
+
+      this.modalInfoTask.idproject = task.idproject;
+      this.modalInfoTask.title = task.title;
+      this.modalInfoTask.content = task.content;
+      this.modalInfoTask.day = task.day;
+      this.modalInfoTask.time = task.time;
+      this.modalInfoTask.Tags = task.Tags;
+      this.modalInfoTask.Project = task.Project;
+
       this.modalShowInfo = true;
-      this.modalTask = task;
     },
     displayEditModal(task) {
+      this.modalShowInfo = false;
+      this.resetShowModal();
+
       this.modalShowEdit = true;
 
-      this.modalTask.idtask = task.idtask;
-      this.modalTask.iduser = task.iduser;
-      this.modalTask.idproject = task.idproject;
-      this.modalTask.title = task.title;
-      this.modalTask.content = task.content;
-      this.modalTask.done = task.done;
-      this.modalTask.day = task.day;
-      this.modalTask.deleted = task.deleted;
+      this.modalEditTask.idtask = task.idtask;
+      this.modalEditTask.iduser = task.iduser;
+      this.modalEditTask.idproject = task.idproject;
+      this.modalEditTask.title = task.title;
+      this.modalEditTask.content = task.content;
+      this.modalEditTask.day = task.day;
+      this.modalEditTask.Project = task.Project;
       
       (task.Tags).forEach(tag => {
-        this.modalTask.Tags.push({text: tag.tagname, value: tag.idtag});
+        this.modalEditTask.Tags.push({text: tag.tagname, value: tag.idtag});
       });
     },
-    resetModal() {
-      this.modalTask = {
-        idtask: null,
-        iduser: null,
+    resetShowModal() {
+      this.modalInfoTask = {
         idproject: null,
         title: null,
         content: null,
-        done: null,
         day: (new Date()).toUTCString().slice(0, 11),
         time: null,
-        deleted: null,
-        Tags: []
+        Tags: [],
+        Project: { title: '', idproject: ''}
+      }
+    },
+    resetEditModal() {
+      this.modalEditTask = {
+        iduser: null,
+        idtask: null,
+        idproject: null,
+        title: null,
+        content: null,
+        day: null,
+        time: null,
+        Tags: [],
+        Project: { title: null, idproject: null }
       }
     },
     getMonth(month) {
