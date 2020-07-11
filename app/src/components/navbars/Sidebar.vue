@@ -73,7 +73,7 @@
               <i 
               class="fas fa-pencil-alt cursor" 
               @click="showEditTag(label)" 
-              v-b-tooltip.hover title="Edit tag"
+              v-b-tooltip.hover title="Edit label"
               ></i>
               <i 
                 class="fas fa-trash-alt ml-3 cursor"
@@ -93,109 +93,18 @@
       </div>
     </ul>
 
-    <b-modal
-      v-model="showCreateProjectModal"
-      size="lg"
-      title="Create Project"
-      @hidden="resetProjectModal"
-    >
-      <div>
-        <b-form @submit="submitProject" @reset="resetProjectModal">
-          <b-form-group
-            id="input-group-1"
-            label="Project title:"
-            label-for="title"
-          >
-            <b-form-input
-              id="title"
-              v-model="createProject.title"
-              type="text"
-              required
-              placeholder="Enter project title"
-            ></b-form-input>
-          </b-form-group>
+    <createProjectModal 
+      v-bind:showCreateProjectModal="showCreateProjectModal"
+    />
 
-          <b-form-group>
-            <b-button type="reset" variant="danger" class="mr-2">Reset</b-button>
-            <b-button type="submit" variant="primary">Create project</b-button>
-          </b-form-group>
-          
-        </b-form>
-      </div>
+    <createTagModal
+      v-bind:showCreateTagModal="showCreateTagModal"
+    />
 
-      <template v-slot:modal-footer>
-        <b-button variant="" @click="showCreateProjectModal = false">Close</b-button>
-      </template>
-    </b-modal>
-
-    <b-modal
-      v-model="showCreateTagModal"
-      size="lg"
-      title="Create Label"
-      @hidden="resetTagModal"
-    >
-      <div>
-        <b-form @submit="submitTag" @reset="resetTagModal">
-          <b-form-group
-            id="input-group-1"
-            label="Label title:"
-            label-for="title"
-          >
-            <b-form-input
-              id="title"
-              v-model="createTag.tagname"
-              type="text"
-              required
-              placeholder="Enter label name"
-            ></b-form-input>
-          </b-form-group>
-
-          <b-form-group>
-            <b-button type="reset" variant="danger" class="mr-2">Reset</b-button>
-            <b-button type="submit" variant="primary">Create label</b-button>
-          </b-form-group>
-          
-        </b-form>
-      </div>
-
-      <template v-slot:modal-footer>
-        <b-button variant="" @click="showCreateTagModal = false">Close</b-button>
-      </template>
-    </b-modal>
-
-    <b-modal
-      v-model="showEditTagModal"
-      size="lg"
-      title="Edit Label"
-      @hidden="resetEditTagModal"
-    >
-      <div>
-        <b-form @submit="submitTagEdited" @reset="resetEditTagModal">
-          <b-form-group
-            id="input-group-1"
-            label="Label title:"
-            label-for="title"
-          >
-            <b-form-input
-              id="title"
-              v-model="editTag.tagname"
-              type="text"
-              required
-              placeholder="Enter label name"
-            ></b-form-input>
-          </b-form-group>
-
-          <b-form-group>
-            <b-button type="submit" variant="primary">Save label</b-button>
-          </b-form-group>
-          
-        </b-form>
-      </div>
-
-      <template v-slot:modal-footer>
-        <b-button variant="" @click="showEditTagModal = false">Close</b-button>
-      </template>
-    </b-modal>
+    <editTagModal
+      v-bind:showEditTagModal="showEditTagModal"
+      v-bind:editTag="editTag"
+    />
   </b-col>
 </template>
 
@@ -203,8 +112,17 @@
 import projectServices from '../../_services/project-services'
 import tagsServices from '../../_services/tags-services'
 
+import CreateProjectModal from '../Modals/ProjectModals/CreateProjectModal'
+import CreateTagModal from '../Modals/TagsModals/CreateTagModal'
+import EditTagModal from '../Modals/TagsModals/EditTagModal'
+
 export default {
   name: 'Sidebar',
+  components: {
+    CreateProjectModal,
+    CreateTagModal,
+    EditTagModal
+  },
   data: () => {
     return {
       inboxActive: false,
@@ -213,13 +131,7 @@ export default {
       projects: [],
       labels: [],
       showCreateProjectModal: false,
-      createProject: {
-        title: ''
-      },
       showCreateTagModal: false,
-      createTag: {
-        tagname: ''
-      },
       showEditTagModal: false,
       editTag: {
         idtag: null,
@@ -265,66 +177,6 @@ export default {
         this.$parent.getTags();
       }
     },
-    resetProjectModal() {
-      this.createProject = {
-        title: ''
-      }
-    },
-    resetTagModal() {
-      this.createTag = {
-        tagname: ''
-      }
-    },
-    async submitProject(evt) {
-      evt.preventDefault();
-      this.createProject.iduser = this.$parent.userInfo.iduser;
-
-      const result = await projectServices.CreateProject(this.createProject);
-
-      if(result.status !== 201) {
-        console.log(result);
-
-        this.$parent.Toast.fire({
-          icon: 'error',
-          title: 'An error has occurred'
-        });
-      } else {
-        this.$parent.Toast.fire({
-          icon: 'success',
-          title: 'Project created succesfully'
-        });
-
-        this.getProjects();
-        this.showCreateProjectModal = false;
-        this.resetProjectModal();
-        this.$parent.getProjects()  ;
-      }
-    },
-    async submitTag(evt) {
-      evt.preventDefault();
-      this.createTag.iduser = this.$parent.userInfo.iduser;
-
-      const result = await tagsServices.CreateTag(this.createTag);
-
-      if(result.status !== 201) {
-        console.log(result);
-
-        this.$parent.Toast.fire({
-          icon: 'error',
-          title: 'An error has occurred'
-        });
-      } else {
-        this.$parent.Toast.fire({
-          icon: 'success',
-          title: 'Label created succesfully'
-        });
-
-        this.getLabels();
-        this.showCreateTagModal = false;
-        this.resetTagModal();
-        this.$parent.getTags();
-      }
-    },
     resetTasks() {
       this.$parent.resetTasks();
     },
@@ -333,39 +185,22 @@ export default {
         idtag: null,
         tagname: null
       }
+    },
+    closeEditTagModal() {
+      this.editTag = {
+        idtag: null,
+        tagname: null
+      }
 
       this.showEditTagModal = false;
     },
     showEditTag(label) {
-      this.editTag.idtag = label.idtag;
-      this.editTag.tagname = label.tagname;
+      this.editTag = {
+        idtag: label.idtag,
+        tagname: label.tagname
+      }
 
       this.showEditTagModal = true;
-    },
-    async submitTagEdited(evt) {
-      evt.preventDefault();
-
-      const result = await tagsServices.EditTag(this.editTag.idtag, { tagname: this.editTag.tagname });
-
-      if(result.status !== 200) {
-        this.$parent.Toast.fire({
-          icon: 'error',
-          title: 'An error has occurred'
-        });
-
-        this.resetEditTagModal();
-      } else {
-        this.$parent.Toast.fire({
-          icon: 'success',
-          title: 'Label edited succesfully'
-        });
-
-        this.getLabels();
-        this.$parent.getTags();
-        this.$parent.resetTasks();
-
-        this.resetEditTagModal();
-      }
     },
     async deleteTag(idtag) {
       const result = await tagsServices.DeleteTag(idtag);
