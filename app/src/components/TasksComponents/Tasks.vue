@@ -18,6 +18,7 @@
       v-bind:showEditModal="showEditModal"
       v-bind:modalEditTask="modalEditTask"
       v-bind:oldTags="oldTags"
+      v-bind:oldTagsIds="oldTagsIds"
       @resetEditModal="resetEditModal"
       @closeEditModal="closeEditModal"
     />
@@ -63,6 +64,7 @@ export default {
         Project: { title: null, idproject: null }
       },
       oldTags: [],
+      oldTagsIds: [],
       months: {
         '01': 'Jan',
         '02': 'Feb',
@@ -108,8 +110,9 @@ export default {
       if(task.Tags !== undefined && task.Tags.length !== 0) {
         (task.Tags).forEach(tag => {
           this.modalEditTask.Tags.push(tag.idtag);
-          this.oldTags.push(tag.idtag);
+          this.oldTagsIds.push(tag.idtag);
         })
+        this.oldTags = task.Tags;
       }
 
       this.showEditModal = true;
@@ -127,6 +130,7 @@ export default {
       }
 
       this.oldTags = [];
+      this.oldTagsIds= [];
     },
     closeShowModal() {
       this.modalInfoTask = {

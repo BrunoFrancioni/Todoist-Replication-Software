@@ -51,7 +51,16 @@
                     ></b-form-select>
                 </b-form-group>
 
-                
+                <b-form-group id="input-group-4" label="Tags:">
+                    <b-form-checkbox-group v-model="modalEditTask.Tags" id="tags">
+                        <b-form-checkbox 
+                            v-for="(tag, index) in this.$parent.$parent.$parent.tagsOptions" 
+                            :key="index"
+                            :value="tag.value"
+                            :checked="(tag.value in modalEditTask.Tags) ? true : false"
+                        >{{ tag.text }}</b-form-checkbox>
+                    </b-form-checkbox-group>
+                </b-form-group>
 
                 <b-form-group 
                     id="input-group-5" 
@@ -86,11 +95,12 @@
 </template>
 
 <script>
-//import tasksServices from '../../../_services/tasks-services'
+import tasksServices from '../../../_services/tasks-services'
+import tasksTaggedServices from '../../../_services/tasks-tagged-services'
 
 export default {
     name: 'EditTaskModal',
-    props: ['showEditModal', 'modalEditTask', 'oldTags'],
+    props: ['showEditModal', 'modalEditTask', 'oldTags', 'oldTagsIds'],
     data() {
         return {
             today: (new Date()).toISOString().slice(0, 10)
@@ -106,7 +116,68 @@ export default {
         async saveTask(evt) {
             evt.preventDefault();
 
+            const editedTask = {
+                idproject: this.modalEditTask.idproject,
+                title: this.modalEditTask.title,
+                content: this.modalEditTask.content,
+                day: this.modalEditTask.day,
+                time: this.modalEditTask.time 
+            }
 
+            const result = await tasksServices.EditTask(this.modalEditTask.idtask, editedTask);
+
+            if(result.status !== 200) {
+                console.log(result);
+                this.closeEditModal();
+
+                this.$parent.$parent.$parent.Toast.fire({
+                    icon: 'error',
+                    title: 'An error has occurred'
+                });
+            } else {
+                (this.oldTags).forEach(async (tag) => {
+                    if(this.modalEditTask.Tags.indexOf(tag.idtag) === -1) {
+                        const result = await tasksTaggedServices.DeleteTaskTagged(tag.TasksTagged.idtasktagged);
+
+                        if(result.status !== 200) {
+                            console.log(result);
+                            this.closeEditModal();
+
+                            this.$parent.$parent.$parent.Toast.fire({
+                                icon: 'error',
+                                title: 'An error has occurred'
+                            });
+                        }
+                    }
+                });
+
+                (this.modalEditTask.Tags).forEach(async (tag) => {
+                    if(this.oldTagsIds.indexOf(tag) === -1) {
+                        const result = await tasksTaggedServices.CreateTaskTagged({
+                            idtask: this.modalEditTask.idtask,
+                            idtag: tag
+                        });
+
+                        if(result.status !== 201) {
+                            console.log(result);
+                            this.closeEditModal();
+
+                            this.$parent.$parent.$parent.Toast.fire({
+                                icon: 'error',
+                                title: 'An error has occurred'
+                            });
+                        }
+                    }
+                });
+
+                this.closeEditModal();
+                this.$parent.$parent.getTasks();
+
+                this.$parent.$parent.$parent.Toast.fire({
+                    icon: 'success',
+                    title: 'Task created succesfully'
+                });
+            }
         }
     }
 }
