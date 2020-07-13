@@ -2,9 +2,15 @@
     <b-modal
         v-model="showEditTagModal"
         size="lg"
-        title="Edit Label"
         @hidden="resetEditTagModal"
+        no-close-on-esc
+        no-close-on-backdrop
     >
+        <template v-slot:modal-header>
+            <h3>Edit Label</h3>
+            <b-button-close @click="closeModal"></b-button-close>
+        </template>
+
         <div>
             <b-form @submit="submitTagEdited" @reset="resetEditTagModal">
                 <b-form-group

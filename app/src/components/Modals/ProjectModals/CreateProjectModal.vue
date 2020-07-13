@@ -2,9 +2,15 @@
     <b-modal
         v-model="showCreateProjectModal"
         size="lg"
-        title="Create Project"
         @hidden="resetModal"
+        no-close-on-esc
+        no-close-on-backdrop
     >
+        <template v-slot:modal-header>
+            <h3>Create Project</h3>
+            <b-button-close @click="closeModal"></b-button-close>
+        </template>
+
         <div>
             <b-form @submit="submitProject" @reset="resetModal">
             <b-form-group

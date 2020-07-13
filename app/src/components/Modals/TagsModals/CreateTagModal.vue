@@ -2,9 +2,15 @@
     <b-modal
         v-model="showCreateTagModal"
         size="lg"
-        title="Create Label"
         @hidden="resetModal"
+        no-close-on-esc
+        no-close-on-backdrop
     >
+        <template v-slot:modal-header>
+            <h3>Create Label</h3>
+            <b-button-close @click="closeModal"></b-button-close>
+        </template>
+
         <div>
             <b-form @submit="submitTag" @reset="resetModal">
                 <b-form-group

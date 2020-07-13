@@ -1,11 +1,17 @@
 <template>
     <b-modal 
         size="lg"
-        v-model="showCreateTaskModal" 
-        title="Create Task"
+        v-model="showCreateTaskModal"
         @hidden="resetModal"
         id="createTaskModal"
-        >
+        no-close-on-esc
+        no-close-on-backdrop
+    >
+        <template v-slot:modal-header>
+            <h3>Create Task</h3>
+            <b-button-close @click="closeModal"></b-button-close>
+        </template>
+
         <div>
             <b-form @submit="submitTask" @reset="resetModal" v-if="showCreateTaskModal">
                 <b-form-group
