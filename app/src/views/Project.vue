@@ -1,39 +1,36 @@
 <template>
-  <div>
-    <h1>{{ project.title }}</h1>
+  <b-col cols="12" md="8">
+    <h1>{{ title }}</h1>
     <hr />
 
-    <tasks v-if="tasks.length > 0" v-bind:tasks="tasks" />
-    <p v-else>No tasks for this project.</p>
-  </div>
+    <projectTasks v-bind:idproject="idproject" />
+  </b-col>
 </template>
 
 <script>
-import tasksServices from '../_services/tasks-services'
-import Tasks from '../components/TasksComponents/Tasks'
+//import tasksServices from '../_services/tasks-services'
+//import Tasks from '../components/TasksComponents/Tasks'
+import ProjectTasks from '../components/ProjectTasks'
 
 export default {
     name: 'Project',
+    props: ['idproject', 'title'],
     components: {
-        Tasks
+        ProjectTasks
     },
-    props: ['project'],
     data() {
         return {
-            tasks: []
+            
         }
     },
     created() {
-        this.getTasks();
+        
     },
     methods: {
-        async getTasks() {
-            const result = await tasksServices.GetProjectTasks(project.idproject);
-            console.log(result);
-            if(result.status === 200) {
-                this.tasks = result.data.tasks;
-            }
-        }
+        
+    },
+    watch: {
+        
     }
 }
 </script>
