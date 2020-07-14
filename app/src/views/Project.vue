@@ -1,11 +1,11 @@
 <template>
   <b-col cols="12" md="8">
-    <b-row>
-      <b-col>
+    <b-row cols="2">
+      <b-col md="10">
         <h1>{{ title }}</h1>
       </b-col>
 
-      <b-col align-v="end">
+      <b-col md="2" class="mt-3">
         <i 
           class="fas fa-pencil-alt cursor" 
           @click="showEditProjectModal" 
