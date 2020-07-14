@@ -38,7 +38,7 @@
 
         <li v-else v-for="(project, index) in projects" :key="index">
           <router-link
-            :to="{ name: 'Project', params: { idproject: project.idproject, title: project.title } }"
+            :to="{ name: 'Project', params: { idproject: project.idproject, title: project.title, archived: project.archived } }"
             class="nav-link text-dark"
             @click="resetTasks"
             replace

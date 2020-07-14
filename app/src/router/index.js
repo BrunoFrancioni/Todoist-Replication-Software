@@ -23,7 +23,7 @@ Vue.use(VueRouter)
     component: () => import('../views/Upcoming.vue')
   },
   {
-    path: '/project/:idproject/title/:title',
+    path: '/project/:idproject/title/:title/archived/:archived',
     name: 'Project',
     props: true,
     component: () => import('../views/Project.vue')
