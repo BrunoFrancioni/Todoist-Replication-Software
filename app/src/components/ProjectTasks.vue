@@ -1,7 +1,7 @@
 <template>
   <div>
     <tasks v-if="tasks.length > 0" v-bind:tasks="tasks" />
-    <p v-else>No tasks in Inbox.</p>
+    <p v-else>No tasks in the project.</p>
   </div>
 </template>
 

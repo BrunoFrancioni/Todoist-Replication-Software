@@ -9,7 +9,10 @@
       <div class="row">
         <sidebar ref="sidebar" />
         <transition>
-          <router-view ref="actualView" />
+          <router-view 
+            ref="actualView" 
+            @resetSidebarProjects="resetSidebarProjects"
+          />
         </transition>
       </div>
     </b-container>
@@ -56,17 +59,17 @@ export default {
       this.$refs.sidebar.setActiveToday();
     },
     async getProjects() {
-      this.projectOptions = [{text: 'Inbox', value: null}];
+      this.projectOptions = [{ text: 'Inbox', value: null }];
       
       (this.$refs.sidebar.projects).forEach(project => {
-        this.projectOptions.push({text: project.title, value: project.idproject});
+        this.projectOptions.push({ text: project.title, value: project.idproject });
       });
     },
     async getTags() {
       this.tagsOptions= [];
       
       (this.$refs.sidebar.labels).forEach(tag => {
-        this.tagsOptions.push({text: tag.tagname, value: tag.idtag});
+        this.tagsOptions.push({ text: tag.tagname, value: tag.idtag });
       });
     },
     showModal(){
@@ -74,6 +77,9 @@ export default {
     },
     resetTasks() {
       this.$refs.actualView.getTasks();
+    },
+    resetSidebarProjects() {
+      this.$refs.sidebar.getProjects();
     }
   }
 }
