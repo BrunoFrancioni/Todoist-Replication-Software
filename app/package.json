@@ -15,10 +15,10 @@
     "vue": "^2.6.11",
     "vue-router": "^3.3.4",
     "vue-sweetalert2": "^3.0.6",
-    "vuex": "^3.4.0"
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
-    "@babel/polyfill": "^7.7.0",
+    "@babel/polyfill": "^7.10.4",
     "@vue/cli-plugin-babel": "^4.4.6",
     "@vue/cli-plugin-eslint": "^4.4.6",
     "@vue/cli-plugin-router": "^4.4.6",
@@ -33,9 +33,10 @@
     "mutationobserver-shim": "^0.3.3",
     "popper.js": "^1.16.0",
     "portal-vue": "^2.1.6",
-    "sass": "^1.19.0",
+    "sass": "^1.26.10",
     "sass-loader": "^8.0.0",
     "vue-cli-plugin-bootstrap-vue": "~0.6.0",
+    "vue-loader": "^15.9.3",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
