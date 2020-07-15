@@ -1,13 +1,15 @@
 <template>
   <div class="tasks">
-    <task 
-      v-for="(task, index) in tasks" 
-      :key="index" 
-      v-bind:task="task" 
-      @showInfoModal="displayInfoModal"
-      @showEditModal="displayEditModal"
-    />
-
+    <div v-if="(tasks !== null) && (tasks !== undefined) && (tasks.length > 0)">
+      <task 
+        v-for="task in tasks" 
+        :key="task.length" 
+        v-bind:task="task" 
+        @showInfoModal="displayInfoModal"
+        @showEditModal="displayEditModal"
+      />
+    </div>
+    
     <showTaskModal
       v-bind:showInfoModal="showInfoModal"
       v-bind:modalInfoTask="modalInfoTask"
@@ -39,29 +41,34 @@ export default {
     ShowTaskModal,
     EditTaskModal
   },
-  props: ['tasks'],
+  props: {
+    tasks: {
+      type: Array,
+      required: true
+    }
+  },
   data() {
     return {
       showInfoModal: false,
       showEditModal: false,
       modalInfoTask: {
         idproject: null,
-        title: null,
-        content: null,
+        title: '',
+        content: '',
         day: (new Date()).toUTCString().slice(0, 11),
         time: null,
         Tags: [],
-        Project: { title: null, idproject: null }
+        Project: { title: '', idproject: null }
       },
       modalEditTask: {
         idtask: null,
         idproject: null,
-        title: null,
-        content: null,
+        title: '',
+        content: '',
         day: null,
         time: null,
         Tags: [],
-        Project: { title: null, idproject: null }
+        Project: { title: '', idproject: null }
       },
       oldTags: [],
       oldTagsIds: [],
@@ -121,12 +128,12 @@ export default {
       this.modalEditTask = {
         idtask: null,
         idproject: null,
-        title: null,
-        content: null,
+        title: '',
+        content: '',
         day: null,
         time: null,
         Tags: [],
-        Project: { title: null, idproject: null }
+        Project: { title: '', idproject: null }
       }
 
       this.oldTags = [];
@@ -135,12 +142,12 @@ export default {
     closeShowModal() {
       this.modalInfoTask = {
         idproject: null,
-        title: null,
-        content: null,
+        title: '',
+        content: '',
         day: (new Date()).toUTCString().slice(0, 11),
         time: null,
         Tags: [],
-        Project: { title: '', idproject: ''}
+        Project: { title: '', idproject: null }
       }
       
       this.showInfoModal = false;
