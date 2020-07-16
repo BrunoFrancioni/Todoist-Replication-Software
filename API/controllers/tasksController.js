@@ -106,14 +106,14 @@ exports.getTodayUserTasks = async (req, res) => {
             },
             include: [
                 {
+                    model: models.Tags
+                },
+                {
                     model: models.Projects,
                     where: {
                         archived: false
                     },
                     required: false
-                },
-                {
-                model: models.Tags
                 }
             ],
             order: [
@@ -324,9 +324,14 @@ exports.getTasksOfProject = async (req, res) => {
                 idproject: parseInt(req.params.idproject),
                 deleted: (req.query.deleted) ? req.query.deleted : false
             },
-            include: [{
-                model: models.Tags
-            }],
+            include: [
+                {
+                    model: models.Tags
+                },
+                {
+                    model: models.Projects
+                }        
+            ],
             order: [
                 ['day', 'ASC'],
                 ['time', 'ASC']
