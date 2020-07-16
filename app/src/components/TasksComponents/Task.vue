@@ -10,7 +10,7 @@
               @click="changeDoneStatus"
             >
             
-            <p v-if="task.title !== null && task.title !== undefined">{{ task.title }}</p>
+            <p>{{ task.title }}</p>
           </b-row>
         </b-col>
           
@@ -46,8 +46,8 @@
           
         <b-col cols="6" md="4">
           <b-row align-h="end" class="pr-3">
-            <p v-if="task.idproject === null || task.Project === null" class="text-secondary">Inbox</p>
-            <p v-else class="text-secondary">{{ task.Project.title }}</p>
+            <p v-if="task.idproject === null" class="text-secondary">Inbox</p>
+            <p v-if="task.Project !== null && task.Project !== undefined" class="text-secondary">{{ task.Project.title }}</p>
           </b-row>
         </b-col>
       </b-row>
