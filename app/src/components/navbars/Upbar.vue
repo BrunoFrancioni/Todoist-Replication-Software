@@ -16,21 +16,24 @@
             </div>
 
             <ul class="nav form-inline ml-auto">
-                <li class="nav-item add-task">
+                <li class="nav-item button">
                     <a 
                         class="nav-link" 
                         @click="showCreateTaskModal" 
                         v-b-tooltip.hover title="Create a task"
-                    ><i class="fas fa-plus text-white add-task-button"></i></a>
+                    ><i class="fas fa-plus text-white icon"></i></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-chart-line text-white mr-1"></i>
-                        <span class="text-white">0/0</span>
+                <li class="nav-item button">
+                    <a 
+                        class="nav-link" 
+                        @click="logout"
+                        v-b-tooltip.hover title="Logout"
+                    >
+                        <i class="fas fa-sign-out-alt text-white icon"></i>
                     </a>
                 </li>
-                <li class="nav-item add-task">
-                    <a class="nav-link" href="#"><i class="fas fa-cog text-white add-task-button"></i></a>
+                <li class="nav-item button">
+                    <a class="nav-link" href="#"><i class="fas fa-cog text-white icon"></i></a>
                 </li>
             </ul>
         </nav>
@@ -46,16 +49,20 @@ export default {
         },
         showCreateTaskModal() {
             this.$emit('showModal');
+        },
+        logout() {
+            this.$store.dispatch('logout');
+            this.$router.push('/login');
         }
     }
 }
 </script>
 
 <style>
-li.add-task:hover {
+li.button:hover {
     cursor: pointer;
 }
-i.add-task-button:hover {
+i.icon:hover {
     background-color:#cec4b4!important;
     border-radius: 2px;
     padding: 3px;
