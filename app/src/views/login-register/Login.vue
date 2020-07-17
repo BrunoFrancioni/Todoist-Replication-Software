@@ -40,6 +40,7 @@
 
 								<b-form-group>
 									<b-button type="submit" variant="primary">Login</b-button>
+									<span v-show="loading" class="spinner-border spinner-border-sm ml-2"></span>
 								</b-form-group>
 
 								<div class="mt-4 text-center">
@@ -55,7 +56,7 @@
 </template>
 
 <script>
-import userServices from '../../_services/user-services'
+//import userServices from '../../_services/user-services'
 
 export default {
 	name: 'Login',
@@ -64,18 +65,26 @@ export default {
 			login: {
 				email: '',
 				password: ''
-			}
+			},
+			loading: false
+		}
+	},
+	computed: {
+		loggedIn() {
+			return this.$store.state.status.loggedIn;
 		}
 	},
 	methods: {
 		async submitLogin(evt) {
 			evt.preventDefault();
 
-			const result = await userServices.LoginUser(this.login);
+			this.loading = true;
+			const result = await this.$store.dispatch('login', this.login);
 
 			if(result.status === 200) {
-				localStorage.setItem('user', JSON.stringify(result.data.token));
-				this.$router.post()
+				this.$router.push('/');
+			} else {
+				this.loading = false;
 			}
 		}
 	}

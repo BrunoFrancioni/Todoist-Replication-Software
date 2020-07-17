@@ -17,11 +17,21 @@ class userServices {
         try {
             const result = await http.post('/users/login', qs.stringify(data));
 
-            return result;
+            if(result.status === 200) {
+                localStorage.setItem('user', JSON.stringify(result.data.token));
+
+                return result;
+            } else {
+                return result;
+            }
         } catch (error) {
             console.log(error);
             return error;
         }
+    }
+
+    LogoutUser = async () => {
+        localStorage.removeItem('user');
     }
 
     EditUser = async (iduser, data) => {
