@@ -1,5 +1,5 @@
 export default authHeader() {
-    let token = process.env.VUE_APP_DEV_TOKEN
+    let token = localStorage.getItem('user');
     console.log(token)
 
     if (token) {
