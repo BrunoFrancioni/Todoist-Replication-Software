@@ -39,7 +39,6 @@ export default {
   },
   data() {
     return {
-      userInfo: JSON.parse(atob(process.env.VUE_APP_DEV_TOKEN.split('.')[1])),
       showCreateTaskModal: false,
       projectOptions: [{text: 'Inbox', value: null}],
       tagsOptions: [],
@@ -53,12 +52,16 @@ export default {
           toast.addEventListener('mouseenter', this.$swal.stopTimer)
           toast.addEventListener('mouseleave', this.$swal.resumeTimer)
         }
-      })
+      }),
+      view: this.$store.state
     }
   },
   computed: {
     current() {
       return this.$route.path;
+    },
+    userInfo() {
+      return JSON.parse(atob(this.$store.state.user.split('.')[1]));
     }
   },
   methods: {
