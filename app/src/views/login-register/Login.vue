@@ -1,7 +1,7 @@
 <template>
-    <div id="app" class="h-100">
-		<div class="container h-100">
-			<div class="row justify-content-md-center h-100">
+    <section class="center">
+		<div class="container center">
+			<div class="row justify-content-md-center center">
 				<div class="card-wrapper">
 					<div class="brand">
 						<img src="favicon.ico" alt="logo">
@@ -51,7 +51,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+    </section>
 </template>
 
 <script>
@@ -90,6 +90,14 @@ html,body {
 body.my-login-page {
 	background-color: #f7f9fb;
 	font-size: 14px;
+}
+
+.center {
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
 }
 
 .my-login-page .brand {

@@ -2,12 +2,13 @@
   <div id="app">
     <upbar 
       v-on:setHomePage="setToday"
-      @showModal="showModal"  
+      @showModal="showModal"
+      v-if="current !== '/login' && current !== '/signup'"
     />
 
     <b-container>
       <div class="row">
-        <sidebar ref="sidebar" />
+        <sidebar ref="sidebar" v-if="current !== '/login' && current !== '/signup'" />
         <transition>
           <router-view 
             ref="actualView" 
@@ -19,6 +20,7 @@
 
     <createTaskModal
       v-bind:showCreateTaskModal="showCreateTaskModal"
+      v-if="current !== '/login' && current !== '/signup'"
     />
   </div>
 </template>
@@ -52,6 +54,11 @@ export default {
           toast.addEventListener('mouseleave', this.$swal.resumeTimer)
         }
       })
+    }
+  },
+  computed: {
+    current() {
+      return this.$route.path;
     }
   },
   methods: {
