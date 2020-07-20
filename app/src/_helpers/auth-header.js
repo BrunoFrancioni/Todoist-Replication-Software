@@ -1,9 +1,9 @@
-export default authHeader() {
+export default authHeader = () => {
     let token = localStorage.getItem('user');
-    console.log(token)
+    console.log(token);
 
     if (token) {
-        return `Bearer ${token}`;
+        return `Bearer ${JSON.parse(token)}`;
     } else {
         return '';
     }
