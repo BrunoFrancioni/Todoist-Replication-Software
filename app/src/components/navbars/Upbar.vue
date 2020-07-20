@@ -28,7 +28,7 @@
                     </a>
                 </li>
                 <li class="nav-item button">
-                    <router-link to="/settings"><i class="fas fa-cog text-white icon"></i></router-link>
+                    <router-link to="/settings" v-b-tooltip.hover title="Settings"><i class="fas fa-cog text-white icon"></i></router-link>
                 </li>
             </ul>
         </nav>
