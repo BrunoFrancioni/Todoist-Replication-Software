@@ -8,7 +8,7 @@
 
     <b-container>
       <div class="row">
-        <sidebar ref="sidebar" v-if="current !== '/login' && current !== '/signup'" />
+        <sidebar ref="sidebar" v-if="current !== '/login' && current !== '/signup' && current !== '/settings'" />
         <transition>
           <router-view 
             ref="actualView" 
@@ -20,7 +20,7 @@
 
     <createTaskModal
       v-bind:showCreateTaskModal="showCreateTaskModal"
-      v-if="current !== '/login' && current !== '/signup'"
+      v-if="current !== '/login' && current !== '/signup' && current !== '/settings'"
     />
   </div>
 </template>

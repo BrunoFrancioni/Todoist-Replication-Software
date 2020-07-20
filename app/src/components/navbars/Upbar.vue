@@ -2,21 +2,16 @@
     <div class="bg-danger mb-4">
         <nav class="nav bg-danger container">
             <div class="form-inline">
-                <a class="navbar-brand" href="#"><i class="fas fa-bars text-white"></i></a>
                 <div @click="setHomePage">
                     <router-link 
                         to="/" 
                         class="nav-link"
                     ><i v-b-tooltip.hover title="Home" class="fas fa-home text-white"></i></router-link>
                 </div>
-                <form class="form-inline my-2 my-lg-0 input-group-sm">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Find">
-                    <button class="btn"><i class="fas fa-search text-white"></i></button>
-                </form>
             </div>
 
             <ul class="nav form-inline ml-auto">
-                <li class="nav-item button">
+                <li class="nav-item button" v-if="this.$parent.current !== '/settings'">
                     <a 
                         class="nav-link" 
                         @click="showCreateTaskModal" 
@@ -33,7 +28,7 @@
                     </a>
                 </li>
                 <li class="nav-item button">
-                    <a class="nav-link" href="#"><i class="fas fa-cog text-white icon"></i></a>
+                    <router-link to="/settings"><i class="fas fa-cog text-white icon"></i></router-link>
                 </li>
             </ul>
         </nav>
