@@ -27,9 +27,11 @@ export default new Vuex.Store({
     },
     registerSuccess(state) {
       state.state.loggedIn = false;
+      state.user = null;
     },
     registerFailure(state) {
       state.status.loggedIn = false;
+      state.user = null;
     }
   },
   actions: {
@@ -47,6 +49,17 @@ export default new Vuex.Store({
     logout({ commit }) {
       userServices.LogoutUser();
       commit('logout');
+    },
+    async register({ commit }, user) {
+      const result = await userServices.CreateUser(user);
+      
+      if(result.status === 201) {
+        commit('registerSuccess');
+        return result;
+      } else {
+        commit('registerFailure');
+        return result;
+      }
     }
   },
   modules: {

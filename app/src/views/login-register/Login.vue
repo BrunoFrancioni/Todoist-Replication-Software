@@ -66,12 +66,28 @@ export default {
 				email: '',
 				password: ''
 			},
-			loading: false
+			loading: false,
+			Toast: this.$swal.mixin({
+				toast: true,
+				position: 'bottom-end',
+				showConfirmButton: false,
+				timer: 2000,
+				timerProgressBar: true,
+				onOpen: (toast) => {
+					toast.addEventListener('mouseenter', this.$swal.stopTimer)
+					toast.addEventListener('mouseleave', this.$swal.resumeTimer)
+				}
+			})
 		}
 	},
 	computed: {
 		loggedIn() {
 			return this.$store.state.status.loggedIn;
+		}
+	},
+	mounted() {
+		if (this.loggedIn) {
+			this.$router.push('/');
 		}
 	},
 	methods: {
@@ -82,9 +98,19 @@ export default {
 			const result = await this.$store.dispatch('login', this.login);
 
 			if(result.status === 200) {
+				this.loading = false;
 				this.$router.push('/');
 			} else {
 				this.loading = false;
+				this.Toast.fire({
+					icon: 'error',
+					title: 'Email or password incorrect'
+				});
+
+				this.login = {
+					email: '',
+					password: ''
+				}
 			}
 		}
 	}

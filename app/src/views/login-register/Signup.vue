@@ -94,14 +94,55 @@ export default {
 				lastname: '',
 				email: '',
 				password: ''
-			}
+			},
+			Toast: this.$swal.mixin({
+				toast: true,
+				position: 'bottom-end',
+				showConfirmButton: false,
+				timer: 1000,
+				timerProgressBar: true,
+				onOpen: (toast) => {
+					toast.addEventListener('mouseenter', this.$swal.stopTimer)
+					toast.addEventListener('mouseleave', this.$swal.resumeTimer)
+				}
+			})
+		}
+	},
+	computed: {
+		loggedIn() {
+			return this.$store.state.status.loggedIn;
+		}
+	},
+	mounted() {
+		if (this.loggedIn) {
+			this.$router.push('/');
 		}
 	},
 	methods: {
 		async submitSignup(evt) {
 			evt.preventDefault();
 
+			const result = await this.$store.dispatch('register', this.signup);
 			
+			if(result.status === 201) {
+				this.Toast.fire({
+					icon: 'success',
+					title: 'User registered succesfully'
+				});
+				this.$router.push('/login');
+			} else {
+				this.Toast.fire({
+					icon: 'error',
+					title: 'An error has occurred'
+				});
+
+				this.signup = {
+					name: '',
+					lastname: '',
+					email: '',
+					password: ''
+				}
+			}
 		}
 	}
 }
