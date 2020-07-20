@@ -42,6 +42,11 @@ Vue.use(VueRouter)
       component: () => import('../views/Project.vue')
     },
     {
+      path: '/settings',
+      name: 'Settings',
+      component: () => import('../views/Settings.vue')
+    },
+    {
       path: '*',
       redirect: '/'
     }
