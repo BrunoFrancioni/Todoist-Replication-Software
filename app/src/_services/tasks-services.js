@@ -57,6 +57,17 @@ class tasksServices {
         }
     }
 
+    GetDeletedTasks = async (iduser) => {
+        try {
+            const result = await http.get(`/tasks/users/${iduser}/deleted`);
+
+            return result;
+        } catch(error) {
+            console.log(error);
+            return [];
+        }
+    }
+
     EditTask = async (idtask, data) => {
         try {
             
