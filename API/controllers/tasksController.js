@@ -387,7 +387,7 @@ exports.DeleteTask = async (req, res) => {
 }
 
 exports.UpdateTask = async (req, res) => {
-    const { idproject, title, content, done, day, time } = req.body;
+    const { idproject, title, content, done, day, time, deleted } = req.body;
     
     let toUpdate = {};
 
@@ -408,6 +408,8 @@ exports.UpdateTask = async (req, res) => {
     if(day) toUpdate.day = day;
 
     if(time !== undefined) toUpdate.time = time;
+
+    if(deleted !== undefined && deleted !== null) toUpdate.deleted = deleted;
     
     if(Object.keys(toUpdate).length === 0){
         return res.status(400).json({
