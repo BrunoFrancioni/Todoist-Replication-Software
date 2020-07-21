@@ -47,6 +47,11 @@ Vue.use(VueRouter)
       component: () => import('../views/Settings.vue')
     },
     {
+      path: '/deleted',
+      name: 'Deleted',
+      component: () => import('../views/DeletedTasks.vue')
+    },
+    {
       path: '*',
       redirect: '/'
     }
