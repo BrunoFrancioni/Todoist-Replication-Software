@@ -90,6 +90,14 @@
             @click="showCreateTagModal = true"
           ><i class="fas fa-plus"></i> <span>Add label</span></b-link>
         </li>
+
+        <hr>
+
+        <li>
+          <router-link to="/deleted">
+            <span class="text-secondary">Show deleted tasks</span>
+          </router-link>
+        </li>
       </div>
     </ul>
 
