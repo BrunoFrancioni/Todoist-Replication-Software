@@ -3,30 +3,15 @@
         <b-row align-h="between">
             <b-col cols="6" md="4">
                 <b-row align-h="start">
-                    <input 
-                        type="checkbox" 
-                        class="control-input mt-1 mr-1"
-                        v-model="task.done" 
-                        @click="changeDoneStatus"
-                    >
-                    
                     <p>{{ task.title }}</p>
                 </b-row>
             </b-col>
             
             <b-col cols="6" md="4" align-h="start">
                 <b-row align-h="end" class="pr-3">
-                    <i 
-                        class="fas fa-info mr-3 cursor" 
-                        v-b-tooltip.hover title="See details"  
-                    ></i>
-                    <i 
-                        class="fas fa-pencil-alt cursor" 
-                        v-b-tooltip.hover title="Edit task"
-                    ></i>
-                    <i 
-                        class="fas fa-trash-alt ml-3 cursor"
-                        v-b-tooltip.hover title="Delete task"
+                    <i
+                        class="fas fa-arrow-up cursor"
+                        v-b-tooltip.hover title="Retrieve task"  
                     ></i>
                 </b-row>
             </b-col>
@@ -51,7 +36,7 @@
 
         <b-row v-if="task.Tags.length !== 0">
             <span 
-                class="badge badge-warning mr-2"
+                class="badge badge-warning mr-2 p-1"
                 v-for="(tag, index) in task.Tags"
                 :key="index"
             >{{ tag.tagname }}</span>
@@ -63,7 +48,7 @@
 <script>
 export default {
     name: 'TaskDeleted',
-    prop: ['task'],
+    props: ['task'],
     data() {
         return {
             months: {
@@ -79,7 +64,8 @@ export default {
                 '10': 'Oct',
                 '11': 'Nov',
                 '12': 'Dec'
-            }
+            },
+            showRecoverTaskModal: false
         }
     },
     methods: {
@@ -91,5 +77,10 @@ export default {
 </script>
 
 <style>
-
+.cursor:hover {
+    cursor: pointer;
+    background-color:#cec4b4!important;
+    border-radius: 2px;
+    padding: 5px;
+}
 </style>
