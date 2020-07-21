@@ -11,7 +11,7 @@
             </div>
 
             <ul class="nav form-inline ml-auto">
-                <li class="nav-item button" v-if="this.$parent.current !== '/settings'">
+                <li class="nav-item button" v-if="this.$parent.current !== '/settings' && this.$parent.current !== '/deleted'">
                     <a 
                         class="nav-link" 
                         @click="showCreateTaskModal" 
