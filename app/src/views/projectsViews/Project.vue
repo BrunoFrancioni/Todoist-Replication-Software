@@ -37,10 +37,10 @@
 </template>
 
 <script>
-import projectServices from '../_services/project-services'
+import projectServices from '../../_services/project-services'
 
-import ProjectTasks from '../components/ProjectsComponents/ProjectTasks'
-import EditProjectModal from '../components/Modals/ProjectModals/EditProjectModal'
+import ProjectTasks from '../../components/ProjectsComponents/ProjectTasks'
+import EditProjectModal from '../../components/Modals/ProjectModals/EditProjectModal'
 
 export default {
     name: 'Project',

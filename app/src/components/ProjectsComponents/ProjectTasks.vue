@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import Tasks from './TasksComponents/Tasks'
-import tasksServices from '../_services/tasks-services'
+import Tasks from '../TasksComponents/Tasks'
+import tasksServices from '../../_services/tasks-services'
 
 export default {
     name: 'ProjectTasks',

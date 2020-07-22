@@ -52,7 +52,7 @@
           ><i class="fas fa-plus"></i> <span>Add project</span></b-link>
         </li>
 
-        <li>
+        <li class="mt-2">
           <router-link to="/project/archived">
             <span class="text-secondary">Show archived projects</span>
           </router-link>
