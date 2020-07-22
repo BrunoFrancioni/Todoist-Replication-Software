@@ -16,6 +16,10 @@
         - [System Constraints](#constraints)
         - [Working behaviour of the system views](#behaviour)
         - [General working behaviour](#generalbehaviour)
+- [Section 3 - Final thoughts](#section3)
+    - [What I achieved](#archieved)
+    - [What I didn't achieved](#notarchieved)
+    - [What I learned](#learned)
 
 
 ***
@@ -82,12 +86,10 @@ We can create projects with they own notes to be organized. When we finish them,
 
 #### System Constraints.<a name="constraints"></a>
 
-1. Once you create a task, simple or project, you can't edit it to move between the two existing types.
-2. If you create a new task and you don't specify the day, it will be saved in the actual day.
-3. You can't create tasks for the days before today.
-4. You can't change the `iduser` of the tables Tags, Projects and Tasks because the tasks belongs tothe user.
-5. You can't modifies the tuples of the table TasksTagged. You can just request, add and delete from it.
-
+1. If you create a new task and you don't specify the day, it will be saved in the actual day.
+2. You can't create tasks for the days before today.
+3. You can't change the `iduser` of the tables Tags, Projects and Tasks because the tasks belongs to the user.
+4. You can't modifies the tuples of the table TasksTagged. You can just request, add and delete from it.
 5. You can't modifies the tuples of the table TasksTagged. You can just request, add and delete from it.
 
 #### Working behaviour of the system views.<a name="behaviour"></a>
@@ -128,3 +130,22 @@ This view shows all the tags that the user created. If yout click in one of them
 
 - If a day past and are tasks that are not marked as done, the system is going to show us all that ones and it will ask us if we want to mark them as complete or we want to reprogram them.
 - If a task has been deleted, we are going to give the chance to get it back.
+
+## Section 3 - Final thoughts.<a name="section3"></a>
+
+### What I achieved.<a name="achieved"></a>
+
+- The principal behaviour of Todoist is present in the software.
+- The system gives a good user experience.
+- If you delete a task or you archived a project you can retrieve them.
+
+### What I didn't achieved.<a name="notachieved"></a>
+
+- There is no way to make a search in the system.
+- The upbar don't shows how many tasks you marked as complete.
+- There are no tests in all over the project.
+
+### What I learned.<a name="learned"></a>
+
+- Is really necessary to write tests to make a better code.
+- I don't feel confortable using javascript in the backend. Next time that I want to develop a project in Node, I want to use a framework that uses Typescript, so I will be more sure about the types of the data that is sended from the app.
