@@ -3,7 +3,7 @@
     <h1>Deleted Tasks</h1>
     <hr />
 
-    <listDeletedTasks v-if="tasks.length > 0" v-bind:tasks="tasks" />
+    <listDeletedTasks v-if="tasks.length > 0" v-bind:tasks="tasks" @getTasks="getTasks" />
     <p v-else>No deleted tasks.</p>
   </b-col>
 </template>

@@ -3,6 +3,13 @@
         <b-row align-h="between">
             <b-col cols="6" md="4">
                 <b-row align-h="start">
+                    <input 
+                        type="checkbox" 
+                        class="control-input mt-1 mr-1"
+                        v-model="task.done" 
+                        disabled
+                    >
+                    
                     <p>{{ task.title }}</p>
                 </b-row>
             </b-col>
@@ -11,7 +18,8 @@
                 <b-row align-h="end" class="pr-3">
                     <i
                         class="fas fa-arrow-up cursor"
-                        v-b-tooltip.hover title="Retrieve task"  
+                        v-b-tooltip.hover title="Retrieve task"
+                        @click="showRetrieveTaskModal"
                     ></i>
                 </b-row>
             </b-col>
@@ -64,13 +72,15 @@ export default {
                 '10': 'Oct',
                 '11': 'Nov',
                 '12': 'Dec'
-            },
-            showRecoverTaskModal: false
+            }
         }
     },
     methods: {
         getMonth(month) {
             return this.months[month];
+        },
+        showRetrieveTaskModal() {
+            this.$emit('showRetrieveTaskModal', this.task);
         }
     }
 }
