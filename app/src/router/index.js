@@ -39,7 +39,12 @@ Vue.use(VueRouter)
       path: '/project/:idproject/title/:title/archived/:archived',
       name: 'Project',
       props: true,
-      component: () => import('../views/Project.vue')
+      component: () => import('../views/projectsViews/Project.vue')
+    },
+    {
+      path: '/project/archived',
+      name: 'Project Archived',
+      component: () => import('../views/projectsViews/ArchivedProjects')
     },
     {
       path: '/settings',

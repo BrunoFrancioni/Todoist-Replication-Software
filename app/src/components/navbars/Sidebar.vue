@@ -51,6 +51,12 @@
             @click="showCreateProjectModal = true"
           ><i class="fas fa-plus"></i> <span>Add project</span></b-link>
         </li>
+
+        <li>
+          <router-link to="/project/archived">
+            <span class="text-secondary">Show archived projects</span>
+          </router-link>
+        </li>
       </div>
 
       <li class="nav-item form-inline">
