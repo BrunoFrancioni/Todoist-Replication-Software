@@ -54,7 +54,7 @@
 
       <b-row v-if="task.Tags.length !== 0">
         <span 
-          class="badge badge-warning mr-2"
+          class="badge badge-warning mr-2 p-2"
           v-for="(tag, index) in task.Tags"
           :key="index"
         >{{ tag.tagname }}</span>
