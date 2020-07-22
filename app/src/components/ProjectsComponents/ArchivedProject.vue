@@ -5,12 +5,14 @@
                 <p>{{ project.title }}</p>
             </b-col>
                 
-            <b-col cols="6" md="4" align-h="start">
-                <i
-                    class="fas fa-arrow-up cursor"
-                    v-b-tooltip.hover title="Retrieve project"
-                    @click="saveProject"
-                ></i>
+            <b-col cols="6" md="4">
+                <b-row align-h="end">
+                    <i
+                        class="fas fa-arrow-up cursor mr-3"
+                        v-b-tooltip.hover title="Retrieve project"
+                        @click="saveProject"
+                    ></i>
+                </b-row>
             </b-col>
         </b-row>
 
