@@ -71,7 +71,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### Create task view.
 
-![Create tasks view](/app/ReadmePictures/create_task.png 'Create tasks view')
+![Create task](/app/ReadmePictures/create_task.png 'Create task')
 
 ### Deleted tasks view.
 
