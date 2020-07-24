@@ -54,19 +54,17 @@ Saves all the tags that every task haves. If you add a tag to a task, one of thi
 
 '/tasks/:idtask' → `put` changes information of a task.
 
-'/tasks/users/:iduser?deleted=false&project=true' → `get` returns all the tasks of the user that haves not being deleted and also the ones that belong to a Project.
+'/tasks/:iduser/today' → `get` returns all the users's tasks of the actual day.
 
-'/tasks/users/:iduser?deleted=true&project=true' → `get` returns all the tasks deleted of a user and also the ones that belong to a Project.
+'/tasks/:iduser/inbox' → `get` returns all the user's tasks of the actual day without the ones that belongs to a project.
 
-'/tasks/users/:iduser?deleted=false&project=false' → `get` returns all the tasks of the user that haves not being deleted but without the ones that belong to a project.
+'/tasks/:iduser/upcoming' → `get` returns all the user's tasks from today onwards.
 
-'/tasks/users/:iduser?deleted=true&project=false' → `get` returns all the tasks deleted of a user but without the ones that belong to a project.
+'/tasks/:iduser/deleted' → `get` returns all the user's tasks deleted.
 
-'/tasks/projects/:idproject?deleted=false' → `get`  returns all the tasks that belongs to the project without the deleted ones.
+'/tasks/projects/:idproject?deleted=true' → `get` returns all the tasks deleted that belongs to the project.
 
-'/tasks/projects/:idproject?deleted=true' → `get` returns all the tasks  deleted that belongs to the project.
-
-'/tasks/:idtask' →`delete` marks as deleted the task.
+'/tasks/:idtask' → `delete` marks as deleted the task.
 
 **Projects Table.**
 
@@ -98,4 +96,4 @@ Saves all the tags that every task haves. If you add a tag to a task, one of thi
 
 ### Postman collection of the endpoints.<a name="postman"></a>
 
-[Postman Collection](https://web.postman.co/collections/11228098-060b9bb6-55d3-47a8-93e0-1de55a2e0668?version=latest&workspace=ad6b593d-3cca-46a9-8864-c87f1dd423b7)
+[Postman Collection](https://documenter.getpostman.com/view/11228098/T1DpDdg4)
